@@ -19,8 +19,8 @@ export default async function AppLayout({
     <div className="min-h-screen">
       <Sidebar />
       {/* Main content — offset for sidebar on desktop */}
-      <main className="md:pl-56 pb-20 md:pb-0">
-        <div className="max-w-3xl mx-auto px-4 py-8">
+      <main className="md:pl-56 pb-36 md:pb-8">
+        <div className="max-w-3xl mx-auto px-4 py-6 sm:py-8">
           {children}
         </div>
       </main>

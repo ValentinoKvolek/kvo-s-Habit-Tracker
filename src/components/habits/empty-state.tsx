@@ -17,10 +17,10 @@ export function EmptyState() {
         </div>
       </div>
 
-      <h3 className="text-lg font-semibold text-white mb-2">
+      <h3 className="text-lg font-semibold text-parchment-950 mb-2">
         Empezá tu primer hábito
       </h3>
-      <p className="text-sm text-white/40 max-w-xs mb-6 leading-relaxed">
+      <p className="text-sm text-parchment-700 max-w-xs mb-6 leading-relaxed">
         Los mejores cambios comienzan pequeños. Agregá un hábito que quieras mantener y empezá a construir tu racha hoy.
       </p>
 

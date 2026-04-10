@@ -4,11 +4,13 @@ import { getHabitsWithTodayEntries } from "@/lib/queries/habit.queries";
 import { HabitCard } from "@/components/habits/habit-card";
 import { EmptyState } from "@/components/habits/empty-state";
 import { formatDisplayDate, getTodayString } from "@/lib/utils/dates";
+import { getQuoteOfDay } from "@/lib/utils/quotes";
+import { QuoteOfDay } from "@/components/dashboard/quote-of-day";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
 export const metadata = {
-  title: "Dashboard — Momentum",
+  title: "Dashboard — Constantia",
 };
 
 export default async function DashboardPage() {
@@ -21,34 +23,35 @@ export default async function DashboardPage() {
   const totalCount = habits.length;
 
   const greeting = getGreeting();
+  const quote = getQuoteOfDay(today);
 
   return (
     <div>
       {/* Header */}
       <div className="mb-8">
-        <p className="text-sm text-white/40 mb-1">
+        <p className="text-sm text-parchment-500 mb-1">
           {formatDisplayDate(today, {
             weekday: "long",
             day: "numeric",
             month: "long",
           })}
         </p>
-        <h1 className="text-2xl font-bold text-white tracking-tight">
+        <h1 className="text-2xl font-bold text-parchment-950 tracking-tight">
           {greeting}, {session.user.name.split(" ")[0]}
         </h1>
 
         {/* Progress summary */}
         {totalCount > 0 && (
           <div className="mt-4 flex items-center gap-3">
-            <div className="flex-1 h-1.5 rounded-full bg-white/8 overflow-hidden">
+            <div className="flex-1 h-1.5 rounded-full bg-parchment-300 overflow-hidden">
               <div
-                className="h-full rounded-full bg-violet-500 transition-all duration-700"
+                className="h-full rounded-full bg-sienna-700 transition-all duration-700"
                 style={{
                   width: `${(completedCount / totalCount) * 100}%`,
                 }}
               />
             </div>
-            <span className="text-xs text-white/40 flex-shrink-0">
+            <span className="text-xs text-parchment-500 flex-shrink-0">
               {completedCount}/{totalCount} completados
             </span>
           </div>
@@ -66,14 +69,17 @@ export default async function DashboardPage() {
         </div>
       )}
 
+      {/* Quote of the day — fixed bottom-left */}
+      <QuoteOfDay quote={quote} />
+
       {/* FAB for mobile - floating add button */}
       {habits.length > 0 && (
         <div className="fixed bottom-24 right-4 md:hidden">
           <Link
             href="/habits/new"
-            className="w-14 h-14 rounded-2xl bg-violet-600 flex items-center justify-center shadow-xl shadow-violet-900/50 active:scale-95 transition-transform"
+            className="w-14 h-14 rounded-2xl bg-parchment-950 flex items-center justify-center shadow-xl active:scale-95 transition-transform"
           >
-            <Plus size={24} className="text-white" />
+            <Plus size={24} className="text-parchment-100" />
           </Link>
         </div>
       )}

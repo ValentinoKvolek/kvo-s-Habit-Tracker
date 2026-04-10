@@ -11,12 +11,8 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="relative z-10 flex items-center justify-between px-8 py-6 max-w-5xl mx-auto w-full">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-sm border border-parchment-400 flex items-center justify-center">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-sienna-700">
-              <path d="M12 3L12 21M3 12L21 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-            </svg>
-          </div>
-          <span className="font-serif font-bold text-parchment-950 tracking-wide text-lg">Momentum</span>
+          <img src="/logo.png" alt="Constantia" className="w-8 h-8 rounded-full object-cover" />
+          <span className="font-serif font-bold text-parchment-950 tracking-wide text-lg">Constantia</span>
         </div>
         <div className="flex items-center gap-4">
           <Link
@@ -119,9 +115,9 @@ export default function LandingPage() {
             "La excelencia no es un acto sino un hábito." — Aristóteles
           </p>
           <p className="font-sans text-xs text-parchment-400">
-            Momentum es open source.{" "}
+            Constantia es open source.{" "}
             <a
-              href="https://github.com"
+              href="https://github.com/ValentinoKvolek"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sienna-600 hover:text-sienna-800 transition-colors underline underline-offset-2"

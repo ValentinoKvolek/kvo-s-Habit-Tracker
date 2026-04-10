@@ -7,8 +7,10 @@ import { getHabitWithAllEntries } from "@/lib/queries/habit.queries";
 import { HabitCalendar } from "@/components/habits/habit-calendar";
 import { HabitStatCard } from "@/components/habits/habit-stat-card";
 import { HabitIcons } from "@/components/habits/habit-icons";
+import { CompletionButton } from "@/components/habits/completion-button";
 import { getHabitColor } from "@/lib/utils/colors";
 import { calculateCurrentStreak, calculateLongestStreak } from "@/lib/utils/streak";
+import { getTodayString } from "@/lib/utils/dates";
 import type { HabitColor } from "@/lib/db/schema";
 
 interface Props {
@@ -24,49 +26,76 @@ export default async function HabitDetailPage({ params }: Props) {
   if (!data) notFound();
 
   const { habit, entries } = data;
+  const today = getTodayString();
   const allDates = entries.map((e) => e.date);
   const entryDateSet = new Set(allDates);
   const currentStreak = calculateCurrentStreak(allDates);
   const longestStreak = calculateLongestStreak(allDates);
   const colorData = getHabitColor(habit.color as HabitColor);
 
+  const todayEntry = entries.find((e) => e.date === today);
+  const isCompletedToday = !!todayEntry;
+  const todayCount = todayEntry?.count ?? 0;
+
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between mb-6 sm:mb-8">
+        <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/dashboard"
-            className="p-2 rounded-xl text-white/40 hover:text-white hover:bg-white/8 transition-colors"
+            className="p-2 rounded-xl text-parchment-500 hover:text-parchment-950 hover:bg-parchment-200 transition-colors flex-shrink-0"
           >
             <ArrowLeft size={18} />
           </Link>
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ background: colorData.hex + "20" }}
           >
-            <HabitIcons icon={habit.icon} color={colorData.hex} size={20} />
+            <HabitIcons icon={habit.icon} color={colorData.hex} size={18} />
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-white leading-tight">
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-bold text-parchment-950 leading-tight truncate">
               {habit.name}
             </h1>
             {habit.description && (
-              <p className="text-sm text-white/40 mt-0.5">{habit.description}</p>
+              <p className="text-xs sm:text-sm text-parchment-500 mt-0.5 truncate">{habit.description}</p>
             )}
           </div>
         </div>
         <Link
           href={`/habits/${id}/edit`}
-          className="p-2 rounded-xl text-white/30 hover:text-white hover:bg-white/8 transition-colors"
+          className="p-2 rounded-xl text-parchment-400 hover:text-parchment-950 hover:bg-parchment-200 transition-colors flex-shrink-0"
         >
           <Pencil size={16} />
         </Link>
       </div>
 
+      {/* Completion button — marcar hoy */}
+      <div className="flex items-center justify-between bg-parchment-200 border border-parchment-300 rounded-2xl p-4 mb-6">
+        <div>
+          <p className="text-sm font-medium text-parchment-950">
+            {isCompletedToday ? "Completado hoy" : "Marcar como hecho hoy"}
+          </p>
+          <p className="text-xs text-parchment-500 mt-0.5">
+            {isCompletedToday
+              ? "¡Bien hecho! Podés desmarcar si fue un error."
+              : "Registrá tu progreso de hoy."}
+          </p>
+        </div>
+        <CompletionButton
+          habitId={habit.id}
+          isCompleted={isCompletedToday}
+          currentStreak={currentStreak}
+          color={habit.color as HabitColor}
+          targetCount={habit.targetCount}
+          todayCount={todayCount}
+        />
+      </div>
+
       {/* Stats */}
       <section className="mb-6">
-        <h2 className="text-sm font-medium text-white/40 uppercase tracking-wider mb-3">
+        <h2 className="text-sm font-medium text-parchment-500 uppercase tracking-wider mb-3">
           Estadísticas
         </h2>
         <HabitStatCard
@@ -79,7 +108,7 @@ export default async function HabitDetailPage({ params }: Props) {
 
       {/* Calendar */}
       <section className="mb-6">
-        <h2 className="text-sm font-medium text-white/40 uppercase tracking-wider mb-3">
+        <h2 className="text-sm font-medium text-parchment-500 uppercase tracking-wider mb-3">
           Historial
         </h2>
         <HabitCalendar
@@ -88,11 +117,11 @@ export default async function HabitDetailPage({ params }: Props) {
         />
       </section>
 
-      {/* Danger zone */}
-      <section className="mt-8 pt-6 border-t border-white/6">
+      {/* Edit link */}
+      <section className="mt-8 pt-6 border-t border-parchment-300">
         <Link
           href={`/habits/${id}/edit`}
-          className="text-sm text-white/30 hover:text-white/60 transition-colors"
+          className="text-sm text-parchment-400 hover:text-parchment-700 transition-colors"
         >
           Editar o archivar este hábito →
         </Link>

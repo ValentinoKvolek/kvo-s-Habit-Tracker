@@ -1,7 +1,7 @@
 import { LoginForm } from "@/components/auth/login-form";
 
 export const metadata = {
-  title: "Iniciar sesión — Momentum",
+  title: "Iniciar sesión — Constantia",
 };
 
 export default function LoginPage() {

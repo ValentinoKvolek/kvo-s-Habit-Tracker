@@ -26,12 +26,8 @@ export function Sidebar() {
     <aside className="hidden md:flex flex-col w-56 min-h-screen bg-parchment-200 border-r border-parchment-300 p-4 fixed left-0 top-0 bottom-0 z-40">
       {/* Logo */}
       <Link href="/dashboard" className="flex items-center gap-2.5 mb-8 px-2">
-        <div className="w-7 h-7 rounded-sm border border-parchment-400 flex items-center justify-center flex-shrink-0">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="text-sienna-700">
-            <path d="M12 3L12 21M3 12L21 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-          </svg>
-        </div>
-        <span className="font-serif font-bold text-parchment-950 text-sm tracking-wide">Momentum</span>
+        <img src="/logo.png" alt="Constantia" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+        <span className="font-serif font-bold text-parchment-950 text-sm tracking-wide">Constantia</span>
       </Link>
 
       {/* Nav */}

@@ -17,7 +17,6 @@ interface HabitCardProps {
 export function HabitCard({ habit, index = 0 }: HabitCardProps) {
   const color = getHabitColor(habit.color as HabitColor);
 
-  // Streak aura intensity: 0 at 0 days, maxes out at 30+ days
   const auraOpacity = Math.min(0.35, (habit.currentStreak / 30) * 0.35);
   const auraBlur = Math.min(40, 15 + habit.currentStreak * 0.8);
 
@@ -44,10 +43,10 @@ export function HabitCard({ habit, index = 0 }: HabitCardProps) {
       <div
         className={cn(
           "relative flex items-center gap-4 p-4 rounded-2xl",
-          "bg-white/5 border border-white/8",
-          "hover:bg-white/7 hover:border-white/12",
+          "bg-parchment-200 border border-parchment-300",
+          "hover:bg-parchment-300/60 hover:border-parchment-400",
           "transition-all duration-200",
-          habit.isCompletedToday && "bg-white/6 border-white/10"
+          habit.isCompletedToday && "bg-parchment-300/40"
         )}
       >
         {/* Icon */}
@@ -61,20 +60,17 @@ export function HabitCard({ habit, index = 0 }: HabitCardProps) {
         </div>
 
         {/* Content */}
-        <Link
-          href={`/habits/${habit.id}`}
-          className="flex-1 min-w-0"
-        >
+        <Link href={`/habits/${habit.id}`} className="flex-1 min-w-0">
           <p
             className={cn(
               "font-medium text-sm leading-tight truncate",
-              habit.isCompletedToday ? "text-white/60 line-through" : "text-white"
+              habit.isCompletedToday ? "text-parchment-500 line-through" : "text-parchment-950"
             )}
           >
             {habit.name}
           </p>
           {habit.currentStreak > 0 && (
-            <p className="text-xs mt-0.5" style={{ color: color.hex + "cc" }}>
+            <p className="text-xs mt-0.5" style={{ color: color.hex }}>
               🔥 {habit.currentStreak}{" "}
               {habit.currentStreak === 1 ? "día seguido" : "días seguidos"}
             </p>

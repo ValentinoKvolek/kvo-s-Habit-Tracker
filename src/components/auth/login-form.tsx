@@ -75,11 +75,11 @@ export function LoginForm() {
         Iniciar sesión
       </Button>
 
-      <p className="text-center text-sm text-white/40">
+      <p className="text-center text-sm font-sans text-parchment-500">
         ¿No tenés cuenta?{" "}
         <Link
           href="/register"
-          className="text-violet-400 hover:text-violet-300 transition-colors"
+          className="text-sienna-700 hover:text-sienna-900 transition-colors underline underline-offset-2"
         >
           Registrate gratis
         </Link>

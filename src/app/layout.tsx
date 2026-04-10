@@ -16,12 +16,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Momentum — Tu tracker de hábitos",
+  title: "Constantia — Tu tracker de hábitos",
   description:
-    "Momentum es un tracker de hábitos open source, gratis para siempre. Construí rutinas que duran sin paywalls.",
+    "Constantia es un tracker de hábitos open source, gratis para siempre. Construí rutinas que duran sin paywalls.",
   keywords: ["habit tracker", "hábitos", "rutinas", "open source", "gratuito"],
   openGraph: {
-    title: "Momentum — Tu tracker de hábitos",
+    title: "Constantia — Tu tracker de hábitos",
     description: "Gratis, open source, sin límites.",
     type: "website",
   },

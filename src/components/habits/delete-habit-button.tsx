@@ -50,12 +50,11 @@ export function DeleteHabitButton({ habitId, habitName }: DeleteHabitButtonProps
 
   return (
     <>
-      <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row gap-2">
         <Button
           variant="outline"
           size="sm"
           onClick={() => setShowDialog(true)}
-          className="text-white/50 border-white/10"
         >
           Archivar
         </Button>
@@ -73,8 +72,8 @@ export function DeleteHabitButton({ habitId, habitName }: DeleteHabitButtonProps
         onClose={() => setShowDialog(false)}
         title="¿Qué querés hacer?"
       >
-        <p className="text-sm text-white/60 mb-5">
-          <strong className="text-white">{habitName}</strong> —
+        <p className="text-sm text-parchment-600 mb-5">
+          <strong className="text-parchment-950">{habitName}</strong> —{" "}
           Archivar preserva tu historial. Eliminar borra todo permanentemente.
         </p>
         <div className="flex flex-col gap-2">

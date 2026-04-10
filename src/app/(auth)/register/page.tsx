@@ -1,7 +1,7 @@
 import { RegisterForm } from "@/components/auth/register-form";
 
 export const metadata = {
-  title: "Crear cuenta — Momentum",
+  title: "Crear cuenta — Constantia",
 };
 
 export default function RegisterPage() {

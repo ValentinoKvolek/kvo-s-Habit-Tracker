@@ -5,6 +5,6 @@ export default {
   out: "./drizzle/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL_UNPOOLED!,
+    url: process.env.DATABASE_URL!,
   },
 } satisfies Config;
