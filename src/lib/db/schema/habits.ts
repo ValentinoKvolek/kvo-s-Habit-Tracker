@@ -16,6 +16,13 @@ export const frequencyEnum = pgEnum("frequency", [
   "custom",
 ]);
 
+export const habitCategoryEnum = pgEnum("habit_category", [
+  "general",
+  "sport",
+  "study",
+  "health",
+]);
+
 export const habitColorEnum = pgEnum("habit_color", [
   "violet",
   "blue",
@@ -61,6 +68,9 @@ export const habit = pgTable("habit", {
   targetCount: integer("target_count").notNull().default(1),
   sortOrder: integer("sort_order").notNull().default(0),
   isArchived: boolean("is_archived").notNull().default(false),
+  category: habitCategoryEnum("category").notNull().default("general"),
+  isSport: boolean("is_sport").notNull().default(false),
+  sportType: text("sport_type"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -93,6 +103,64 @@ export const habitEntry = pgTable(
   ]
 );
 
+export const workoutLog = pgTable(
+  "workout_log",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    habitId: text("habit_id")
+      .notNull()
+      .references(() => habit.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    // "YYYY-MM-DD" — same convention as habitEntry.date
+    date: text("date").notNull(),
+    // JSON string — GymWorkoutData | CardioWorkoutData | { notes?: string }
+    data: text("data").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("workout_log_unique_idx").on(
+      table.habitId,
+      table.userId,
+      table.date
+    ),
+  ]
+);
+
+export const studyLog = pgTable(
+  "study_log",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    habitId: text("habit_id")
+      .notNull()
+      .references(() => habit.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    // "YYYY-MM-DD" — same convention as habitEntry.date
+    date: text("date").notNull(),
+    // Cumulative Pomodoro sessions completed on this date
+    sessions: integer("sessions").notNull().default(0),
+    // Total focused minutes accumulated on this date
+    totalMinutes: integer("total_minutes").notNull().default(0),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex("study_log_unique_idx").on(
+      table.habitId,
+      table.userId,
+      table.date
+    ),
+  ]
+);
+
 // Type helpers
 export type Habit = typeof habit.$inferSelect;
 export type NewHabit = typeof habit.$inferInsert;
@@ -101,3 +169,8 @@ export type NewHabitEntry = typeof habitEntry.$inferInsert;
 export type HabitColor = (typeof habitColorEnum.enumValues)[number];
 export type HabitIcon = (typeof habitIconEnum.enumValues)[number];
 export type Frequency = (typeof frequencyEnum.enumValues)[number];
+export type Category = (typeof habitCategoryEnum.enumValues)[number];
+export type WorkoutLog = typeof workoutLog.$inferSelect;
+export type NewWorkoutLog = typeof workoutLog.$inferInsert;
+export type StudyLog = typeof studyLog.$inferSelect;
+export type NewStudyLog = typeof studyLog.$inferInsert;

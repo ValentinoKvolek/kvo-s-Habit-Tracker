@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth";
 import { getHabitById } from "@/lib/queries/habit.queries";
 import { HabitForm } from "@/components/habits/habit-form";
 import { DeleteHabitButton } from "@/components/habits/delete-habit-button";
-import type { HabitColor, HabitIcon } from "@/lib/db/schema";
+import type { HabitColor, HabitIcon, Category } from "@/lib/db/schema";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -45,6 +45,8 @@ export default async function EditHabitPage({ params }: Props) {
           color: habit.color as HabitColor,
           frequency: habit.frequency as "daily" | "weekly" | "monthly" | "custom",
           targetCount: habit.targetCount,
+          category: habit.category as Category,
+          sportType: habit.sportType ?? undefined,
         }}
       />
 

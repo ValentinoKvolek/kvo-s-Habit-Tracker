@@ -1,8 +1,9 @@
-import { eq, and, asc } from "drizzle-orm";
+import { eq, and, asc, desc } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { habit, habitEntry } from "@/lib/db/schema";
+import { habit, habitEntry, workoutLog, studyLog } from "@/lib/db/schema";
 import { getTodayString } from "@/lib/utils/dates";
 import { calculateCurrentStreak } from "@/lib/utils/streak";
+import type { WorkoutData } from "@/lib/validations/workout.schema";
 
 export type HabitWithMeta = {
   id: string;
@@ -15,6 +16,8 @@ export type HabitWithMeta = {
   targetCount: number;
   sortOrder: number;
   isArchived: boolean;
+  category: string;
+  sportType: string | null;
   createdAt: Date;
   updatedAt: Date;
   isCompletedToday: boolean;
@@ -63,7 +66,20 @@ export async function getHabitsWithTodayEntries(
     );
 
     return {
-      ...h,
+      id: h.id,
+      name: h.name,
+      description: h.description,
+      icon: h.icon,
+      color: h.color,
+      frequency: h.frequency,
+      frequencyDays: h.frequencyDays,
+      targetCount: h.targetCount,
+      sortOrder: h.sortOrder,
+      isArchived: h.isArchived,
+      category: h.category,
+      sportType: h.sportType,
+      createdAt: h.createdAt,
+      updatedAt: h.updatedAt,
       isCompletedToday: !!todayEntry,
       todayCount: todayEntry?.count ?? 0,
       currentStreak: calculateCurrentStreak(dates),
@@ -99,4 +115,114 @@ export async function getHabitWithAllEntries(habitId: string, userId: string) {
     );
 
   return { habit: h, entries };
+}
+
+// ── Workout log queries ─────────────────────────────────────────────────────
+
+export type WorkoutLogEntry = {
+  id: string;
+  date: string;
+  data: WorkoutData;
+};
+
+/**
+ * Fetch a single workout log for a habit on a given date.
+ */
+export async function getWorkoutLog(
+  habitId: string,
+  date: string,
+  userId: string
+): Promise<WorkoutData | null> {
+  const result = await db
+    .select()
+    .from(workoutLog)
+    .where(
+      and(
+        eq(workoutLog.habitId, habitId),
+        eq(workoutLog.userId, userId),
+        eq(workoutLog.date, date)
+      )
+    )
+    .limit(1);
+
+  if (!result[0]) return null;
+  return JSON.parse(result[0].data) as WorkoutData;
+}
+
+/**
+ * Fetch all workout logs for a habit, ordered by date descending.
+ */
+export async function getWorkoutHistory(
+  habitId: string,
+  userId: string
+): Promise<WorkoutLogEntry[]> {
+  const results = await db
+    .select()
+    .from(workoutLog)
+    .where(
+      and(eq(workoutLog.habitId, habitId), eq(workoutLog.userId, userId))
+    )
+    .orderBy(desc(workoutLog.date));
+
+  return results.map((row) => ({
+    id: row.id,
+    date: row.date,
+    data: JSON.parse(row.data) as WorkoutData,
+  }));
+}
+
+// ── Study log queries ───────────────────────────────────────────────────────
+
+export type StudyLogEntry = {
+  id: string;
+  date: string;
+  sessions: number;
+  totalMinutes: number;
+};
+
+/**
+ * Fetch today's study log for a habit.
+ */
+export async function getStudyLog(
+  habitId: string,
+  date: string,
+  userId: string
+): Promise<{ sessions: number; totalMinutes: number } | null> {
+  const result = await db
+    .select()
+    .from(studyLog)
+    .where(
+      and(
+        eq(studyLog.habitId, habitId),
+        eq(studyLog.userId, userId),
+        eq(studyLog.date, date)
+      )
+    )
+    .limit(1);
+
+  if (!result[0]) return null;
+  return { sessions: result[0].sessions, totalMinutes: result[0].totalMinutes };
+}
+
+/**
+ * Fetch all study logs for a habit, ordered by date descending.
+ */
+export async function getStudyHistory(
+  habitId: string,
+  userId: string
+): Promise<StudyLogEntry[]> {
+  const results = await db
+    .select()
+    .from(studyLog)
+    .where(
+      and(eq(studyLog.habitId, habitId), eq(studyLog.userId, userId))
+    )
+    .orderBy(desc(studyLog.date));
+
+  return results.map((row) => ({
+    id: row.id,
+    date: row.date,
+    sessions: row.sessions,
+    totalMinutes: row.totalMinutes,
+  }));
 }

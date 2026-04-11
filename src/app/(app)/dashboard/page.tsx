@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { getHabitsWithTodayEntries } from "@/lib/queries/habit.queries";
-import { HabitCard } from "@/components/habits/habit-card";
+import { HabitTree } from "@/components/habits/habit-tree";
 import { EmptyState } from "@/components/habits/empty-state";
 import { formatDisplayDate, getTodayString } from "@/lib/utils/dates";
 import { getQuoteOfDay } from "@/lib/utils/quotes";
@@ -58,15 +58,11 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      {/* Habits list */}
+      {/* Habits tree */}
       {habits.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="flex flex-col gap-3">
-          {habits.map((habit, i) => (
-            <HabitCard key={habit.id} habit={habit} index={i} />
-          ))}
-        </div>
+        <HabitTree habits={habits} />
       )}
 
       {/* Quote of the day — fixed bottom-left */}

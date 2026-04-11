@@ -3,11 +3,15 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Pencil } from "lucide-react";
 import { auth } from "@/lib/auth";
-import { getHabitWithAllEntries } from "@/lib/queries/habit.queries";
+import { getHabitWithAllEntries, getWorkoutLog, getWorkoutHistory, getStudyLog, getStudyHistory } from "@/lib/queries/habit.queries";
 import { HabitCalendar } from "@/components/habits/habit-calendar";
 import { HabitStatCard } from "@/components/habits/habit-stat-card";
 import { HabitIcons } from "@/components/habits/habit-icons";
 import { CompletionButton } from "@/components/habits/completion-button";
+import { WorkoutLogger } from "@/components/habits/workout-logger";
+import { WorkoutHistory } from "@/components/habits/workout-history";
+import { PomodoroTimer } from "@/components/habits/pomodoro-timer";
+import { StudyHistory } from "@/components/habits/study-history";
 import { getHabitColor } from "@/lib/utils/colors";
 import { calculateCurrentStreak, calculateLongestStreak } from "@/lib/utils/streak";
 import { getTodayString } from "@/lib/utils/dates";
@@ -36,6 +40,16 @@ export default async function HabitDetailPage({ params }: Props) {
   const todayEntry = entries.find((e) => e.date === today);
   const isCompletedToday = !!todayEntry;
   const todayCount = todayEntry?.count ?? 0;
+
+  const isSport = habit.category === "sport";
+  const isStudy = habit.category === "study";
+
+  const [todayLog, workoutLogs, todayStudy, studyLogs] = await Promise.all([
+    isSport ? getWorkoutLog(habit.id, today, session.user.id) : Promise.resolve(null),
+    isSport ? getWorkoutHistory(habit.id, session.user.id) : Promise.resolve([]),
+    isStudy ? getStudyLog(habit.id, today, session.user.id) : Promise.resolve(null),
+    isStudy ? getStudyHistory(habit.id, session.user.id) : Promise.resolve([]),
+  ]);
 
   return (
     <div>
@@ -105,6 +119,43 @@ export default async function HabitDetailPage({ params }: Props) {
           color={habit.color as HabitColor}
         />
       </section>
+
+      {/* Workout tracking — hábitos deportivos */}
+      {isSport && habit.sportType && (
+        <>
+          <section className="mb-6">
+            <WorkoutLogger
+              habitId={habit.id}
+              sportType={habit.sportType}
+              date={today}
+              initialData={todayLog}
+            />
+          </section>
+          <section className="mb-6">
+            <WorkoutHistory
+              logs={workoutLogs}
+              sportType={habit.sportType}
+            />
+          </section>
+        </>
+      )}
+
+      {/* Pomodoro — hábitos de estudio */}
+      {isStudy && (
+        <>
+          <section className="mb-6">
+            <PomodoroTimer
+              habitId={habit.id}
+              date={today}
+              targetCount={habit.targetCount}
+              todayCompletedSessions={todayStudy?.sessions ?? 0}
+            />
+          </section>
+          <section className="mb-6">
+            <StudyHistory sessions={studyLogs} />
+          </section>
+        </>
+      )}
 
       {/* Calendar */}
       <section className="mb-6">
