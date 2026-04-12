@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Plus, Settings } from "lucide-react";
+import { LayoutDashboard, Plus, Settings, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
+  { href: "/tasks", label: "Tareas", icon: ClipboardList },
   { href: "/habits/new", label: "Nuevo", icon: Plus, isAction: true },
   { href: "/settings", label: "Ajustes", icon: Settings },
 ];
@@ -33,7 +34,7 @@ export function MobileNav() {
               )}
             >
               {isAction ? (
-                <div className="w-11 h-11 rounded-sm bg-parchment-950 flex items-center justify-center shadow-md -mt-4">
+                <div className="w-11 h-11 rounded-2xl bg-parchment-950 flex items-center justify-center shadow-md -mt-4">
                   <Icon size={20} className="text-parchment-100" />
                 </div>
               ) : (

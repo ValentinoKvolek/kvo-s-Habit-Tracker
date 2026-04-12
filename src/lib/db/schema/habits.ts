@@ -71,6 +71,7 @@ export const habit = pgTable("habit", {
   category: habitCategoryEnum("category").notNull().default("general"),
   isSport: boolean("is_sport").notNull().default(false),
   sportType: text("sport_type"),
+  reminderTime: text("reminder_time"), // "HH:MM" or null
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

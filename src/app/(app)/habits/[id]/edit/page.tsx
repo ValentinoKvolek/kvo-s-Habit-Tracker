@@ -47,6 +47,7 @@ export default async function EditHabitPage({ params }: Props) {
           targetCount: habit.targetCount,
           category: habit.category as Category,
           sportType: habit.sportType ?? undefined,
+          reminderTime: habit.reminderTime ?? "",
         }}
       />
 

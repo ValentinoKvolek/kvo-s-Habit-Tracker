@@ -1,11 +1,14 @@
 import type { Config } from "drizzle-kit";
 
+const url = process.env.DATABASE_URL!;
+const isLocal = url?.includes("localhost") || url?.includes("127.0.0.1");
+
 export default {
   schema: "./src/lib/db/schema/index.ts",
   out: "./drizzle/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
-    ssl: "require",
+    url,
+    ...(isLocal ? {} : { ssl: "require" }),
   },
 } satisfies Config;

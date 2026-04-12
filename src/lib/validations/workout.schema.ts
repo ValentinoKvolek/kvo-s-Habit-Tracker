@@ -21,6 +21,7 @@ export const exerciseSchema = z.object({
 });
 
 export const gymWorkoutSchema = z.object({
+  sessionName: z.string().max(80).optional(),
   exercises: z.array(exerciseSchema).min(1, "Agregá al menos un ejercicio"),
   notes: z.string().max(500).optional(),
 });
@@ -28,6 +29,7 @@ export const gymWorkoutSchema = z.object({
 // ── Cardio ─────────────────────────────────────────────────────────────────
 
 export const cardioWorkoutSchema = z.object({
+  sessionName: z.string().max(80).optional(),
   distance: z.coerce.number().min(0).max(9999).optional(), // km
   duration: z.coerce.number().int().min(0).max(1440).optional(), // minutes
   notes: z.string().max(500).optional(),
@@ -36,6 +38,7 @@ export const cardioWorkoutSchema = z.object({
 // ── Other ──────────────────────────────────────────────────────────────────
 
 export const otherWorkoutSchema = z.object({
+  sessionName: z.string().max(80).optional(),
   notes: z.string().max(500).optional(),
 });
 

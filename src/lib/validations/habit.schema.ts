@@ -53,6 +53,11 @@ export const habitSchema = z.object({
   targetCount: z.coerce.number().int().min(1).max(100).default(1),
   category: z.enum(HABIT_CATEGORIES).default("general"),
   sportType: z.string().optional(),
+  reminderTime: z
+    .string()
+    .regex(/^\d{2}:\d{2}$/, "Formato inválido")
+    .optional()
+    .or(z.literal("")),
 })
   .superRefine((data, ctx) => {
     if (data.category === "sport" && !data.sportType) {

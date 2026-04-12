@@ -1,6 +1,8 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { SignOutButton } from "@/components/auth/sign-out-button";
+import { ProfileForm } from "@/components/settings/profile-form";
+import { PasswordForm } from "@/components/settings/password-form";
 
 export const metadata = {
   title: "Ajustes — Constantia",
@@ -19,7 +21,7 @@ export default async function SettingsPage() {
 
       {/* Profile card */}
       <div className="bg-parchment-200 border border-parchment-300 rounded-xl p-5 mb-4">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 mb-4">
           <div className="w-12 h-12 rounded-full bg-sienna-100 border border-sienna-200 flex items-center justify-center flex-shrink-0">
             <span className="text-sm font-bold text-sienna-700">
               {session.user.name
@@ -35,6 +37,20 @@ export default async function SettingsPage() {
             <p className="text-sm text-parchment-500">{session.user.email}</p>
           </div>
         </div>
+        <div className="border-t border-parchment-300 pt-4">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-parchment-500 mb-3">
+            Cambiar nombre
+          </h3>
+          <ProfileForm currentName={session.user.name} />
+        </div>
+      </div>
+
+      {/* Password section */}
+      <div className="bg-parchment-200 border border-parchment-300 rounded-xl p-5 mb-4">
+        <h3 className="text-sm font-medium text-parchment-500 uppercase tracking-wider mb-4">
+          Contraseña
+        </h3>
+        <PasswordForm />
       </div>
 
       {/* About section */}

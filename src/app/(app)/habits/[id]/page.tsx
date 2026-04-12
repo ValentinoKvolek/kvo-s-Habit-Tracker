@@ -129,6 +129,7 @@ export default async function HabitDetailPage({ params }: Props) {
               sportType={habit.sportType}
               date={today}
               initialData={todayLog}
+              history={workoutLogs}
             />
           </section>
           <section className="mb-6">

@@ -267,6 +267,54 @@ export function HabitForm({ mode, habitId, defaultValues }: HabitFormProps) {
         )}
       </div>
 
+      {/* Reminder time */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-parchment-950">
+          Recordatorio{" "}
+          <span className="text-parchment-500 font-normal">(opcional)</span>
+        </label>
+        <input
+          type="time"
+          className="h-11 w-full rounded-sm px-3.5 text-sm font-sans bg-parchment-100 border border-parchment-400 text-parchment-950 focus:outline-none focus:border-sienna-600 focus:bg-parchment-50 transition-all duration-150"
+          {...register("reminderTime")}
+        />
+        {errors.reminderTime && (
+          <p className="text-xs text-rose-600">{errors.reminderTime.message as string}</p>
+        )}
+        <p className="text-xs text-parchment-500">
+          Recibís una notificación del navegador a esta hora si tenés la pestaña abierta
+        </p>
+      </div>
+
+      {/* Daily repetitions stepper */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-parchment-950">
+          Repeticiones diarias
+        </label>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setValue("targetCount", Math.max(1, watch("targetCount") - 1))}
+            className="w-8 h-8 rounded-lg border border-parchment-300 bg-parchment-200 hover:bg-parchment-300 text-parchment-700 font-bold text-lg flex items-center justify-center transition-colors"
+          >
+            −
+          </button>
+          <span className="w-6 text-center font-semibold text-parchment-950">
+            {watch("targetCount")}
+          </span>
+          <button
+            type="button"
+            onClick={() => setValue("targetCount", Math.min(99, watch("targetCount") + 1))}
+            className="w-8 h-8 rounded-lg border border-parchment-300 bg-parchment-200 hover:bg-parchment-300 text-parchment-700 font-bold text-lg flex items-center justify-center transition-colors"
+          >
+            +
+          </button>
+        </div>
+        <p className="text-xs text-parchment-500">
+          Cuántas veces por día para marcar el hábito como completado
+        </p>
+      </div>
+
       {/* Submit */}
       <Button
         type="submit"

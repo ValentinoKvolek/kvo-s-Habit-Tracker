@@ -28,9 +28,16 @@ function GymLogCard({ log }: { log: WorkoutLogEntry }) {
     <div className="bg-parchment-100 border border-parchment-300 rounded-xl p-4">
       <div className="flex items-center gap-2 mb-3">
         <Icon size={13} className="text-parchment-500 flex-shrink-0" />
-        <span className="text-xs font-medium text-parchment-700">
-          {formatShortDate(log.date)}
-        </span>
+        <div className="flex items-baseline gap-2 min-w-0">
+          {data.sessionName && (
+            <span className="text-xs font-semibold text-parchment-950 truncate">
+              {data.sessionName}
+            </span>
+          )}
+          <span className="text-xs text-parchment-500 flex-shrink-0">
+            {formatShortDate(log.date)}
+          </span>
+        </div>
       </div>
 
       <table className="w-full text-xs">
@@ -74,9 +81,16 @@ function CardioLogCard({ log, sportType }: { log: WorkoutLogEntry; sportType: st
     <div className="bg-parchment-100 border border-parchment-300 rounded-xl p-4">
       <div className="flex items-center gap-2 mb-3">
         <Icon size={13} className="text-parchment-500 flex-shrink-0" />
-        <span className="text-xs font-medium text-parchment-700">
-          {formatShortDate(log.date)}
-        </span>
+        <div className="flex items-baseline gap-2 min-w-0">
+          {data.sessionName && (
+            <span className="text-xs font-semibold text-parchment-950 truncate">
+              {data.sessionName}
+            </span>
+          )}
+          <span className="text-xs text-parchment-500 flex-shrink-0">
+            {formatShortDate(log.date)}
+          </span>
+        </div>
       </div>
 
       <div className="flex gap-3">
@@ -107,16 +121,23 @@ function CardioLogCard({ log, sportType }: { log: WorkoutLogEntry; sportType: st
 }
 
 function OtherLogCard({ log }: { log: WorkoutLogEntry }) {
-  const data = log.data as { notes?: string };
+  const data = log.data as { sessionName?: string; notes?: string };
   const Icon = SPORT_ICONS.other;
 
   return (
     <div className="bg-parchment-100 border border-parchment-300 rounded-xl p-4">
       <div className="flex items-center gap-2 mb-2">
         <Icon size={13} className="text-parchment-500 flex-shrink-0" />
-        <span className="text-xs font-medium text-parchment-700">
-          {formatShortDate(log.date)}
-        </span>
+        <div className="flex items-baseline gap-2 min-w-0">
+          {data.sessionName && (
+            <span className="text-xs font-semibold text-parchment-950 truncate">
+              {data.sessionName}
+            </span>
+          )}
+          <span className="text-xs text-parchment-500 flex-shrink-0">
+            {formatShortDate(log.date)}
+          </span>
+        </div>
       </div>
       {data.notes ? (
         <p className="text-sm text-parchment-700">{data.notes}</p>

@@ -18,6 +18,7 @@ export type HabitWithMeta = {
   isArchived: boolean;
   category: string;
   sportType: string | null;
+  reminderTime: string | null;
   createdAt: Date;
   updatedAt: Date;
   isCompletedToday: boolean;
@@ -78,9 +79,10 @@ export async function getHabitsWithTodayEntries(
       isArchived: h.isArchived,
       category: h.category,
       sportType: h.sportType,
+      reminderTime: h.reminderTime,
       createdAt: h.createdAt,
       updatedAt: h.updatedAt,
-      isCompletedToday: !!todayEntry,
+      isCompletedToday: !!todayEntry && (todayEntry.count ?? 1) >= h.targetCount,
       todayCount: todayEntry?.count ?? 0,
       currentStreak: calculateCurrentStreak(dates),
     };

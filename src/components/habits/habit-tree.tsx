@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Dumbbell, BookOpen, Heart, Star } from "lucide-react";
+import { Dumbbell, BookOpen, Heart, Star, Plus } from "lucide-react";
 import { CompletionButton } from "./completion-button";
 import { HabitIcons } from "./habit-icons";
 import { getHabitColor } from "@/lib/utils/colors";
@@ -77,6 +77,14 @@ export function HabitTree({ habits }: HabitTreeProps) {
           habits={grouped[cat]}
         />
       ))}
+
+      <Link
+        href="/habits/new"
+        className="hidden md:flex items-center gap-2 px-3 py-2 text-sm text-parchment-500 border border-dashed border-parchment-400 rounded-sm hover:border-sienna-400 hover:text-sienna-700 transition-colors self-start"
+      >
+        <Plus size={14} />
+        Nuevo hábito
+      </Link>
     </motion.div>
   );
 }

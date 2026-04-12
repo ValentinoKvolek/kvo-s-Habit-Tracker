@@ -40,6 +40,7 @@ export async function createHabit(input: HabitInput) {
     sortOrder: maxOrder + 1,
     category: data.category,
     sportType: data.category === "sport" ? (data.sportType ?? null) : null,
+    reminderTime: data.reminderTime || null,
   });
 
   revalidatePath("/dashboard");
@@ -62,6 +63,7 @@ export async function updateHabit(habitId: string, input: HabitInput) {
       targetCount: data.targetCount,
       category: data.category,
       sportType: data.category === "sport" ? (data.sportType ?? null) : null,
+      reminderTime: data.reminderTime || null,
       updatedAt: new Date(),
     })
     .where(and(eq(habit.id, habitId), eq(habit.userId, session.user.id)));

@@ -5,9 +5,7 @@ import { HabitTree } from "@/components/habits/habit-tree";
 import { EmptyState } from "@/components/habits/empty-state";
 import { formatDisplayDate, getTodayString } from "@/lib/utils/dates";
 import { getQuoteOfDay } from "@/lib/utils/quotes";
-import { QuoteOfDay } from "@/components/dashboard/quote-of-day";
-import Link from "next/link";
-import { Plus } from "lucide-react";
+import { QuoteOfDay, QuoteOfDayInline } from "@/components/dashboard/quote-of-day";
 
 export const metadata = {
   title: "Dashboard — Constantia",
@@ -65,20 +63,9 @@ export default async function DashboardPage() {
         <HabitTree habits={habits} />
       )}
 
-      {/* Quote of the day — fixed bottom-left */}
+      {/* Frase del día — inline en mobile, flotante en desktop */}
+      <QuoteOfDayInline quote={quote} />
       <QuoteOfDay quote={quote} />
-
-      {/* FAB for mobile - floating add button */}
-      {habits.length > 0 && (
-        <div className="fixed bottom-24 right-4 md:hidden">
-          <Link
-            href="/habits/new"
-            className="w-14 h-14 rounded-2xl bg-parchment-950 flex items-center justify-center shadow-xl active:scale-95 transition-transform"
-          >
-            <Plus size={24} className="text-parchment-100" />
-          </Link>
-        </div>
-      )}
     </div>
   );
 }

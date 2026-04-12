@@ -10,6 +10,7 @@ interface StreakRingProps {
   strokeWidth?: number;
   streak?: number;
   isCompleted?: boolean;
+  label?: string; // e.g. "2/3" for count-based habits
 }
 
 export function StreakRing({
@@ -19,6 +20,7 @@ export function StreakRing({
   strokeWidth = 5,
   streak = 0,
   isCompleted = false,
+  label,
 }: StreakRingProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -80,6 +82,16 @@ export function StreakRing({
               transition={{ duration: 0.3, delay: 0.1 }}
             />
           </motion.svg>
+        ) : label ? (
+          <motion.span
+            key={label}
+            initial={{ scale: 0.7, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="font-bold leading-none"
+            style={{ color, fontSize: size * 0.19 }}
+          >
+            {label}
+          </motion.span>
         ) : streak > 0 ? (
           <span
             className="text-xs font-bold leading-none"
