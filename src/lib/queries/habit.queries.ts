@@ -19,12 +19,24 @@ export type HabitWithMeta = {
   category: string;
   sportType: string | null;
   reminderTime: string | null;
+  timeSlot: string | null;
   createdAt: Date;
   updatedAt: Date;
   isCompletedToday: boolean;
   todayCount: number;
   currentStreak: number;
 };
+
+/**
+ * Returns true if the habit should appear on today's dashboard.
+ * Weekly habits are filtered by today's day of week.
+ */
+export function isHabitScheduledToday(habit: HabitWithMeta): boolean {
+  if (habit.frequency !== "weekly") return true;
+  if (!habit.frequencyDays) return true; // fallback: show rather than hide
+  const todayDow = new Date().getDay(); // 0=Sun, 6=Sat
+  return habit.frequencyDays.split(",").map(Number).includes(todayDow);
+}
 
 /**
  * Fetch all active habits for a user, with today's completion status and streaks.
@@ -80,6 +92,7 @@ export async function getHabitsWithTodayEntries(
       category: h.category,
       sportType: h.sportType,
       reminderTime: h.reminderTime,
+      timeSlot: h.timeSlot,
       createdAt: h.createdAt,
       updatedAt: h.updatedAt,
       isCompletedToday: !!todayEntry && (todayEntry.count ?? 1) >= h.targetCount,

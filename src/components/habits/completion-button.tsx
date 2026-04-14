@@ -76,8 +76,9 @@ export function CompletionButton({
   }
 
   function handleIncrement() {
-    if (optimisticCountCompleted) return;
-    const newCount = optimisticCount + 1;
+    const newCount = optimisticCountCompleted
+      ? optimisticCount - 1  // retroceder si ya está completo
+      : optimisticCount + 1; // avanzar si no está completo
     startCount(async () => {
       setOptimisticCount(newCount);
       try {
@@ -94,7 +95,7 @@ export function CompletionButton({
   }
 
   const isPending = isPendingToggle || isPendingCount;
-  const isDisabled = isPending || (isCountMode && optimisticCountCompleted);
+  const isDisabled = isPending;
   const showGlow = isCountMode ? optimisticCountCompleted : optimisticCompleted;
 
   return (
@@ -106,7 +107,9 @@ export function CompletionButton({
       transition={{ type: "spring", stiffness: 400, damping: 20 }}
       aria-label={
         isCountMode
-          ? `${optimisticCount} de ${targetCount} completados`
+          ? optimisticCountCompleted
+            ? "Deshacer última repetición"
+            : `${optimisticCount} de ${targetCount} completados`
           : optimisticCompleted
           ? "Marcar como no completado"
           : "Marcar como completado"

@@ -44,10 +44,12 @@ export default async function EditHabitPage({ params }: Props) {
           icon: habit.icon as HabitIcon,
           color: habit.color as HabitColor,
           frequency: habit.frequency as "daily" | "weekly" | "monthly" | "custom",
+          frequencyDays: habit.frequencyDays ?? undefined,
           targetCount: habit.targetCount,
           category: habit.category as Category,
           sportType: habit.sportType ?? undefined,
           reminderTime: habit.reminderTime ?? "",
+          timeSlot: (habit.timeSlot as "morning" | "afternoon" | "night" | undefined) ?? undefined,
         }}
       />
 

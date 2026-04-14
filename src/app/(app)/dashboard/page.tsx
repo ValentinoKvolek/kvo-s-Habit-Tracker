@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { getHabitsWithTodayEntries } from "@/lib/queries/habit.queries";
+import { getHabitsWithTodayEntries, isHabitScheduledToday } from "@/lib/queries/habit.queries";
+import { TimeSlotTree } from "@/components/habits/time-slot-tree";
 import { HabitTree } from "@/components/habits/habit-tree";
 import { EmptyState } from "@/components/habits/empty-state";
 import { formatDisplayDate, getTodayString } from "@/lib/utils/dates";
@@ -15,7 +16,9 @@ export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return null;
 
-  const habits = await getHabitsWithTodayEntries(session.user.id);
+  const allHabits = await getHabitsWithTodayEntries(session.user.id);
+  const habits = allHabits.filter(isHabitScheduledToday);
+  const useTimeSlots = habits.some((h) => h.timeSlot !== null);
   const today = getTodayString();
   const completedCount = habits.filter((h) => h.isCompletedToday).length;
   const totalCount = habits.length;
@@ -59,6 +62,8 @@ export default async function DashboardPage() {
       {/* Habits tree */}
       {habits.length === 0 ? (
         <EmptyState />
+      ) : useTimeSlots ? (
+        <TimeSlotTree habits={habits} />
       ) : (
         <HabitTree habits={habits} />
       )}

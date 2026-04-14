@@ -35,12 +35,13 @@ export async function createHabit(input: HabitInput) {
     icon: data.icon,
     color: data.color,
     frequency: data.frequency,
-    frequencyDays: data.frequencyDays ?? null,
+    frequencyDays: data.frequency === "weekly" ? (data.frequencyDays ?? null) : null,
     targetCount: data.targetCount,
     sortOrder: maxOrder + 1,
     category: data.category,
     sportType: data.category === "sport" ? (data.sportType ?? null) : null,
     reminderTime: data.reminderTime || null,
+    timeSlot: data.timeSlot ?? null,
   });
 
   revalidatePath("/dashboard");
@@ -59,11 +60,12 @@ export async function updateHabit(habitId: string, input: HabitInput) {
       icon: data.icon,
       color: data.color,
       frequency: data.frequency,
-      frequencyDays: data.frequencyDays ?? null,
+      frequencyDays: data.frequency === "weekly" ? (data.frequencyDays ?? null) : null,
       targetCount: data.targetCount,
       category: data.category,
       sportType: data.category === "sport" ? (data.sportType ?? null) : null,
       reminderTime: data.reminderTime || null,
+      timeSlot: data.timeSlot ?? null,
       updatedAt: new Date(),
     })
     .where(and(eq(habit.id, habitId), eq(habit.userId, session.user.id)));

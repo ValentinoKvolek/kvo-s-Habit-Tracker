@@ -72,9 +72,12 @@ export const habit = pgTable("habit", {
   isSport: boolean("is_sport").notNull().default(false),
   sportType: text("sport_type"),
   reminderTime: text("reminder_time"), // "HH:MM" or null
+  timeSlot: text("time_slot"), // "morning" | "afternoon" | "night" | null
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+export type TimeSlot = "morning" | "afternoon" | "night";
 
 export const habitEntry = pgTable(
   "habit_entry",

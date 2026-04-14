@@ -30,6 +30,14 @@ export const HABIT_ICONS = [
 
 export const HABIT_CATEGORIES = ["general", "sport", "study", "health"] as const;
 
+export const TIME_SLOTS = ["morning", "afternoon", "night"] as const;
+export type TimeSlotValue = (typeof TIME_SLOTS)[number];
+export const TIME_SLOT_LABELS: Record<TimeSlotValue, string> = {
+  morning: "Mañana",
+  afternoon: "Tarde",
+  night: "Noche",
+};
+
 export const CATEGORY_LABELS: Record<string, string> = {
   general: "General",
   sport: "Deporte",
@@ -58,6 +66,7 @@ export const habitSchema = z.object({
     .regex(/^\d{2}:\d{2}$/, "Formato inválido")
     .optional()
     .or(z.literal("")),
+  timeSlot: z.enum(TIME_SLOTS).nullable().optional(),
 })
   .superRefine((data, ctx) => {
     if (data.category === "sport" && !data.sportType) {
@@ -65,6 +74,13 @@ export const habitSchema = z.object({
         code: z.ZodIssueCode.custom,
         message: "Seleccioná un tipo de deporte",
         path: ["sportType"],
+      });
+    }
+    if (data.frequency === "weekly" && !data.frequencyDays) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Seleccioná al menos un día de la semana",
+        path: ["frequencyDays"],
       });
     }
   });
