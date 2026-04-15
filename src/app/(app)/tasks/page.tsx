@@ -1,10 +1,10 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { getActiveTasks, getCompletedTasks } from "@/lib/queries/task.queries";
-import { AddTaskForm } from "@/components/tasks/add-task-form";
-import { TaskItem } from "@/components/tasks/task-item";
+import { getActiveTasks, getCompletedTasks } from "@/features/tasks/queries";
+import { AddTaskForm } from "@/features/tasks/components/add-task-form";
+import { TaskItem } from "@/features/tasks/components/task-item";
 import { ClipboardList } from "lucide-react";
-import type { Task } from "@/lib/db/schema";
+import type { Task } from "@/db/schema";
 
 function todayString() {
   const d = new Date();

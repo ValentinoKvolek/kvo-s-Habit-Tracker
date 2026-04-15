@@ -1,0 +1,21 @@
+export type HabitWithMeta = {
+  id: string;
+  name: string;
+  description: string | null;
+  icon: string;
+  color: string;
+  frequency: string;
+  frequencyDays: string | null;
+  targetCount: number;
+  sortOrder: number;
+  isArchived: boolean;
+  category: string;
+  sportType: string | null;
+  reminderTime: string | null;
+  timeSlot: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  isCompletedToday: boolean;
+  todayCount: number;
+  currentStreak: number;
+};

@@ -3,10 +3,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { auth } from "@/lib/auth";
-import { getHabitById } from "@/lib/queries/habit.queries";
-import { HabitForm } from "@/components/habits/habit-form";
-import { DeleteHabitButton } from "@/components/habits/delete-habit-button";
-import type { HabitColor, HabitIcon, Category } from "@/lib/db/schema";
+import { getHabitById } from "@/features/habits/queries";
+import { HabitForm } from "@/features/habits/components/habit-form";
+import { DeleteHabitButton } from "@/features/habits/components/delete-habit-button";
+import type { HabitColor, HabitIcon, Category } from "@/db/schema";
 
 interface Props {
   params: Promise<{ id: string }>;

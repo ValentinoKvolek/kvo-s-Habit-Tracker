@@ -1,25 +1,36 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { getHabitsWithTodayEntries, isHabitScheduledToday } from "@/lib/queries/habit.queries";
-import { TimeSlotTree } from "@/components/habits/time-slot-tree";
-import { HabitTree } from "@/components/habits/habit-tree";
-import { EmptyState } from "@/components/habits/empty-state";
-import { formatDisplayDate, getTodayString } from "@/lib/utils/dates";
-import { getQuoteOfDay } from "@/lib/utils/quotes";
-import { QuoteOfDay, QuoteOfDayInline } from "@/components/dashboard/quote-of-day";
+import { getHabitsForDate } from "@/features/habits/queries";
+import { isHabitScheduledForDate } from "@/features/habits/logic";
+import { TimeSlotTree } from "@/features/habits/components/time-slot-tree";
+import { HabitTree } from "@/features/habits/components/habit-tree";
+import { EmptyState } from "@/features/habits/components/empty-state";
+import { DateNavigator } from "@/features/dashboard/components/date-navigator";
+import { formatDisplayDate, getTodayString } from "@/lib/dates";
+import { getQuoteOfDay } from "@/lib/quotes";
+import { QuoteOfDay, QuoteOfDayInline } from "@/features/dashboard/components/quote-of-day";
 
 export const metadata = {
   title: "Dashboard — Constantia",
 };
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ date?: string }>;
+}) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return null;
 
-  const allHabits = await getHabitsWithTodayEntries(session.user.id);
-  const habits = allHabits.filter(isHabitScheduledToday);
-  const useTimeSlots = habits.some((h) => h.timeSlot !== null);
   const today = getTodayString();
+  const { date } = await searchParams;
+  // Only accept past dates or today; silently clamp future dates to today
+  const viewDate = date && date <= today ? date : today;
+  const isReadOnly = viewDate < today;
+
+  const allHabits = await getHabitsForDate(session.user.id, viewDate);
+  const habits = allHabits.filter((h) => isHabitScheduledForDate(h, viewDate));
+  const useTimeSlots = habits.some((h) => h.timeSlot !== null);
   const completedCount = habits.filter((h) => h.isCompletedToday).length;
   const totalCount = habits.length;
 
@@ -30,16 +41,28 @@ export default async function DashboardPage() {
     <div>
       {/* Header */}
       <div className="mb-8">
-        <p className="text-sm text-parchment-500 mb-1">
-          {formatDisplayDate(today, {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          })}
-        </p>
-        <h1 className="text-2xl font-bold text-parchment-950 tracking-tight">
-          {greeting}, {session.user.name.split(" ")[0]}
-        </h1>
+        <div className="flex items-center justify-between mb-1">
+          <p className="text-sm text-parchment-500">
+            {formatDisplayDate(viewDate, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+            })}
+          </p>
+          <DateNavigator currentDate={viewDate} />
+        </div>
+
+        {!isReadOnly && (
+          <h1 className="text-2xl font-bold text-parchment-950 tracking-tight">
+            {greeting}, {session.user.name.split(" ")[0]}
+          </h1>
+        )}
+
+        {isReadOnly && (
+          <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-parchment-300 border border-parchment-400 text-xs text-parchment-600">
+            Solo lectura
+          </div>
+        )}
 
         {/* Progress summary */}
         {totalCount > 0 && (
@@ -63,14 +86,14 @@ export default async function DashboardPage() {
       {habits.length === 0 ? (
         <EmptyState />
       ) : useTimeSlots ? (
-        <TimeSlotTree habits={habits} />
+        <TimeSlotTree habits={habits} readOnly={isReadOnly} />
       ) : (
-        <HabitTree habits={habits} />
+        <HabitTree habits={habits} readOnly={isReadOnly} />
       )}
 
       {/* Frase del día — inline en mobile, flotante en desktop */}
-      <QuoteOfDayInline quote={quote} />
-      <QuoteOfDay quote={quote} />
+      {!isReadOnly && <QuoteOfDayInline quote={quote} />}
+      {!isReadOnly && <QuoteOfDay quote={quote} />}
     </div>
   );
 }

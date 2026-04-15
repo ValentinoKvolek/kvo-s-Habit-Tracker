@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { HabitForm } from "@/components/habits/habit-form";
+import { HabitForm } from "@/features/habits/components/habit-form";
 
 export const metadata = {
   title: "Nuevo hábito — Constantia",

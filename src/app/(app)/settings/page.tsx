@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { SignOutButton } from "@/components/auth/sign-out-button";
+import { SignOutButton } from "@/features/auth/components/sign-out-button";
 import { ProfileForm } from "@/components/settings/profile-form";
 import { PasswordForm } from "@/components/settings/password-form";
 

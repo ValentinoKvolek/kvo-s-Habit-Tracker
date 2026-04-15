@@ -2,11 +2,11 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { and, eq, isNotNull } from "drizzle-orm";
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { habit } from "@/lib/db/schema";
+import { db } from "@/db";
+import { habit } from "@/db/schema";
 import { Sidebar } from "@/components/layout/sidebar";
 import { MobileNav } from "@/components/layout/mobile-nav";
-import { ReminderChecker } from "@/components/habits/reminder-checker";
+import { ReminderChecker } from "@/features/habits/components/reminder-checker";
 
 export default async function AppLayout({
   children,

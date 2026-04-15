@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Plus, Settings, ClipboardList } from "lucide-react";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/cn";
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
