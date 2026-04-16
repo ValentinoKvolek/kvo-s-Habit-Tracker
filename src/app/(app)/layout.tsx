@@ -7,6 +7,7 @@ import { habit } from "@/db/schema";
 import { Sidebar } from "@/components/layout/sidebar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { ReminderChecker } from "@/features/habits/components/reminder-checker";
+import { PushSubscribe } from "@/features/push/components/push-subscribe";
 
 export default async function AppLayout({
   children,
@@ -34,6 +35,7 @@ export default async function AppLayout({
   return (
     <div className="min-h-screen">
       <Sidebar />
+      <PushSubscribe />
       <ReminderChecker habits={habitsWithReminders as { id: string; name: string; reminderTime: string }[]} />
       {/* Main content — offset for sidebar on desktop */}
       <main className="md:pl-56 pb-36 md:pb-8">

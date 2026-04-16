@@ -1,0 +1,25 @@
+{
+  "name": "Constantia",
+  "short_name": "Constantia",
+  "description": "Tu tracker de hábitos diarios",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5ede0",
+  "theme_color": "#8b4513",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
