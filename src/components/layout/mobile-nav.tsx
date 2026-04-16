@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { LayoutDashboard, Plus, Settings, ClipboardList } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { LayoutDashboard, Plus, Settings, ClipboardList, LogOut } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { signOut } from "@/lib/auth-client";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
@@ -14,6 +15,12 @@ const NAV_ITEMS = [
 
 export function MobileNav() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleSignOut() {
+    await signOut();
+    router.push("/login");
+  }
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-parchment-200/95 dark:bg-[#231c16]/95 backdrop-blur-xl border-t border-parchment-300 pb-safe">
@@ -46,6 +53,14 @@ export function MobileNav() {
             </Link>
           );
         })}
+
+        <button
+          onClick={handleSignOut}
+          className="flex flex-col items-center justify-center gap-1 flex-1 h-full text-parchment-500 hover:text-parchment-800 transition-all duration-150"
+        >
+          <LogOut size={20} />
+          <span className="text-[10px] font-sans font-medium">Salir</span>
+        </button>
       </div>
     </nav>
   );
