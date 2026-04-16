@@ -29,6 +29,10 @@
     color-scheme: light;
   }
 
+  html.dark {
+    color-scheme: dark;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-text);
@@ -83,6 +87,60 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
+  /* ── Dark mode — global parchment palette remapping ─────────────────────── */
+
+  /* Surfaces — warm elevation ladder (lower = closer to ground/darker) */
+  .dark .bg-parchment-50   { background-color: #342518; }   /* focus peak — topmost */
+  .dark .bg-parchment-100  { background-color: #2a201a; }   /* inputs, info boxes */
+  .dark .bg-parchment-200  { background-color: var(--color-surface); }
+  .dark .bg-parchment-300  { background-color: var(--color-surface-raised); }
+
+  /* Text */
+  .dark .text-parchment-950 { color: var(--color-text); }
+  .dark .text-parchment-800 { color: #e0d0bc; }
+  .dark .text-parchment-700,
+  .dark .text-parchment-600 { color: #c8b49a; }
+  .dark .text-parchment-500 { color: var(--color-text-muted); }
+  .dark .text-parchment-400 { color: #6b5848; }
+  .dark .text-parchment-300 { color: #4d3c2e; }
+
+  /* Borders */
+  .dark .border-parchment-300,
+  .dark .border-parchment-400 { border-color: var(--color-border); }
+
+  /* Ring (calendar today, focus indicators) */
+  .dark .ring-parchment-400 { --tw-ring-color: #5d4030; }
+
+  /* Sienna accent — shifted lighter for dark bg readability */
+  .dark .bg-sienna-100     { background-color: #3d2510; }
+  .dark .bg-sienna-200     { background-color: #4a2d12; }
+  .dark .border-sienna-200 { border-color: #5d3a1a; }
+  .dark .border-sienna-600 { border-color: #c2783c; }
+  .dark .text-sienna-700   { color: #d4895a; }
+  .dark .hover\:text-sienna-700:hover { color: #d4895a; }
+  .dark .hover\:text-sienna-800:hover { color: #b5703f; }
+  .dark .focus\:border-sienna-600:focus { border-color: #c2783c; }
+
+  /* Placeholder — readable but clearly secondary */
+  .dark .placeholder\:text-parchment-400::placeholder { color: #7a6452; }
+
+  /* High-contrast button inversion (bg-parchment-950 used as dark button) */
+  .dark .bg-parchment-950  { background-color: #f0e8d8; }
+  .dark .text-parchment-100 { color: #1c1510; }
+
+  /* Hover states */
+  .dark .hover\:bg-parchment-300:hover     { background-color: var(--color-surface-raised); }
+  .dark .hover\:bg-parchment-300\/60:hover { background-color: rgb(45 35 24 / 0.6); }
+  .dark .hover\:bg-parchment-200:hover     { background-color: var(--color-surface); }
+  .dark .hover\:bg-parchment-400:hover     { background-color: #3d3020; }
+  .dark .hover\:bg-parchment-100:hover     { background-color: #2a201a; }
+  .dark .hover\:text-parchment-950:hover   { color: var(--color-text); }
+  .dark .hover\:text-parchment-800:hover   { color: #e0d0bc; }
+
+  /* Scrollbar */
+  .dark ::-webkit-scrollbar-thumb       { background: #3d3020; }
+  .dark ::-webkit-scrollbar-thumb:hover { background: #4d3d28; }
 
   /* Subtle paper texture overlay */
   .texture-paper::before {

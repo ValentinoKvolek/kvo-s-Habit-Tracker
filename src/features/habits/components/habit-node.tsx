@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "motion/react";
 import { Check, X } from "lucide-react";
 import { CompletionButton } from "./completion-button";
 import { HabitIcons } from "./habit-icons";
@@ -14,22 +13,16 @@ interface HabitNodeProps {
   habit: HabitWithMeta;
   lineColor: string;
   isLast: boolean;
-  index: number;
   readOnly?: boolean;
 }
 
-export function HabitNode({ habit, lineColor, isLast, index, readOnly }: HabitNodeProps) {
+export function HabitNode({ habit, lineColor, isLast, readOnly }: HabitNodeProps) {
   const color = getHabitColor(habit.color as HabitColor);
   const auraOpacity = Math.min(0.25, (habit.currentStreak / 30) * 0.25);
   const auraBlur = Math.min(30, 10 + habit.currentStreak * 0.7);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -8 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.05, duration: 0.25 }}
-      className="flex items-stretch gap-0"
-    >
+    <div className="flex items-stretch gap-0">
       {/* L-shaped connector */}
       <div className="flex flex-col items-center w-4 flex-shrink-0 mr-2">
         <div
@@ -68,7 +61,7 @@ export function HabitNode({ habit, lineColor, isLast, index, readOnly }: HabitNo
             "relative flex items-center gap-3 px-3 py-2.5 rounded-xl",
             "bg-parchment-200 border border-parchment-300",
             "hover:bg-parchment-300/60 hover:border-parchment-400 transition-all duration-150",
-            habit.isCompletedToday && "bg-parchment-300/40"
+            habit.isCompletedToday && "bg-parchment-300/40 dark:bg-[#2d2318]/60"
           )}
         >
           <div
@@ -87,8 +80,8 @@ export function HabitNode({ habit, lineColor, isLast, index, readOnly }: HabitNo
               {habit.name}
             </p>
             {habit.currentStreak > 0 && (
-              <p className="text-xs mt-0.5" style={{ color: color.hex }}>
-                🔥 {habit.currentStreak}{" "}
+              <p className="text-xs mt-0.5 tabular-nums" style={{ color: color.hex }}>
+                {habit.currentStreak}{" "}
                 {habit.currentStreak === 1 ? "día" : "días"}
               </p>
             )}
@@ -97,9 +90,9 @@ export function HabitNode({ habit, lineColor, isLast, index, readOnly }: HabitNo
           {readOnly ? (
             <div
               className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border-2",
+                "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border",
                 habit.isCompletedToday
-                  ? "border-green-500 bg-green-50 text-green-600"
+                  ? "border-sienna-600 bg-sienna-100 text-sienna-700 dark:border-sienna-200 dark:bg-sienna-200 dark:text-sienna-700"
                   : "border-parchment-400 bg-parchment-200 text-parchment-400"
               )}
             >
@@ -117,6 +110,6 @@ export function HabitNode({ habit, lineColor, isLast, index, readOnly }: HabitNo
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

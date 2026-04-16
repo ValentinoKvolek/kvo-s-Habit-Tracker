@@ -19,36 +19,26 @@ const CATEGORY_CONFIG: Record<CategoryKey, {
   label: string;
   Icon: React.ElementType;
   lineColor: string;
-  headerBg: string;
-  borderColor: string;
 }> = {
   general: {
     label: "General",
     Icon: Star,
     lineColor: "#b09a7f",
-    headerBg: "bg-parchment-300",
-    borderColor: "#b09a7f",
   },
   sport: {
     label: "Deporte",
     Icon: Dumbbell,
-    lineColor: "#c0392b",
-    headerBg: "bg-rose-50",
-    borderColor: "#c0392b",
+    lineColor: "#a85860",   // habit.rose — muted, within palette
   },
   study: {
     label: "Estudio",
     Icon: BookOpen,
-    lineColor: "#6366f1",
-    headerBg: "bg-indigo-50",
-    borderColor: "#6366f1",
+    lineColor: "#5a6faa",   // habit.indigo — desaturated
   },
   health: {
     label: "Salud",
     Icon: Heart,
-    lineColor: "#14b8a6",
-    headerBg: "bg-teal-50",
-    borderColor: "#14b8a6",
+    lineColor: "#3d8c7a",   // habit.teal — muted
   },
 };
 
@@ -102,17 +92,14 @@ function CategoryBranch({
   readOnly?: boolean;
 }) {
   const config = CATEGORY_CONFIG[category];
-  const { Icon, lineColor, borderColor } = config;
+  const { Icon, lineColor } = config;
 
   return (
     <div className="flex gap-0">
       <div className="flex flex-col items-center mr-3 flex-shrink-0">
         <div
-          className={cn(
-            "w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 z-10",
-            config.headerBg
-          )}
-          style={{ border: `2px solid ${borderColor}` }}
+          className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 z-10 bg-parchment-200 border border-parchment-300"
+          style={{ borderColor: lineColor + "55" }}
         >
           <Icon size={14} style={{ color: lineColor }} />
         </div>
@@ -127,7 +114,7 @@ function CategoryBranch({
       <div className="flex-1 min-w-0">
         <div className="flex items-center h-8 mb-2">
           <span
-            className="text-xs font-semibold uppercase tracking-wider"
+            className="text-xs font-medium tracking-normal"
             style={{ color: lineColor }}
           >
             {config.label}
@@ -141,7 +128,6 @@ function CategoryBranch({
               habit={habit}
               lineColor={lineColor}
               isLast={idx === habits.length - 1}
-              index={idx}
               readOnly={readOnly}
             />
           ))}

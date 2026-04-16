@@ -6,6 +6,7 @@ import { LayoutDashboard, Plus, Settings, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "./theme-toggle";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -50,18 +51,21 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Sign out */}
-      <button
-        onClick={handleSignOut}
-        className="flex items-center gap-2.5 px-3 py-2 rounded-sm text-sm font-sans text-parchment-500 hover:text-parchment-800 hover:bg-parchment-300/60 transition-all duration-150 mt-4"
-      >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          <polyline points="16 17 21 12 16 7" />
-          <line x1="21" y1="12" x2="9" y2="12" />
-        </svg>
-        Cerrar sesión
-      </button>
+      {/* Theme toggle + Sign out */}
+      <div className="flex items-center justify-between mt-4 px-1">
+        <ThemeToggle />
+        <button
+          onClick={handleSignOut}
+          className="flex items-center gap-2 px-2 py-2 rounded-sm text-xs font-sans text-parchment-500 hover:text-parchment-800 hover:bg-parchment-300/60 transition-all duration-150"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Salir
+        </button>
+      </div>
     </aside>
   );
 }

@@ -27,6 +27,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={cn(
             "h-11 w-full rounded-sm px-3.5 text-sm font-sans",
             "bg-parchment-100 border border-parchment-400",
+            "dark:border-[#5a4030]",
             "text-parchment-950 placeholder:text-parchment-400",
             "transition-all duration-150",
             "focus:outline-none focus:border-sienna-600 focus:bg-parchment-50",

@@ -24,7 +24,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   ghost:
     "text-parchment-600 hover:text-parchment-950 hover:bg-parchment-200 bg-transparent",
   danger:
-    "bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200",
+    "bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-900/50 dark:hover:bg-rose-950/80",
   brand:
     "bg-parchment-950 text-parchment-100 hover:bg-sienna-800 shadow-sm",
 };

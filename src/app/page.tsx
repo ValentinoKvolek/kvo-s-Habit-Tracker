@@ -2,11 +2,7 @@ import Link from "next/link";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-parchment-100 relative overflow-hidden">
-
-      {/* Subtle warm vignette corners */}
-      <div className="fixed top-0 left-0 w-96 h-96 bg-parchment-300/40 rounded-full blur-[160px] pointer-events-none" />
-      <div className="fixed bottom-0 right-0 w-80 h-80 bg-sienna-200/20 rounded-full blur-[140px] pointer-events-none" />
+    <div className="min-h-screen flex flex-col bg-parchment-100 texture-paper relative overflow-hidden">
 
       {/* Nav */}
       <nav className="relative z-10 flex items-center justify-between px-8 py-6 max-w-5xl mx-auto w-full">
@@ -31,7 +27,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <main className="flex-1 flex flex-col items-center justify-center px-8 py-24 text-center relative z-10">
+      <main className="flex-1 flex flex-col items-center justify-center px-8 py-24 text-center relative z-10 animate-fade-in">
 
         {/* Eyebrow */}
         <p className="text-xs font-sans uppercase tracking-[0.2em] text-sienna-600 mb-8 font-medium">

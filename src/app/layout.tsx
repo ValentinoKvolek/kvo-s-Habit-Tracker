@@ -33,20 +33,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className={`${playfair.variable} ${inter.variable}`}>
+    <html lang="es" className={`${playfair.variable} ${inter.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Blocking script — applies .dark before first paint to prevent flash */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme'),d=window.matchMedia('(prefers-color-scheme:dark)').matches;if(t==='dark'||(t!=='light'&&d)){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}}catch(e){}})();` }} />
+      </head>
       <body>
         {children}
-        <Toaster
-          position="bottom-center"
-          toastOptions={{
-            style: {
-              background: "#ede3d5",
-              border: "1px solid #d4c4b0",
-              color: "#1c1410",
-              fontFamily: "var(--font-sans)",
-            },
-          }}
-        />
+        <Toaster position="bottom-center" theme="system" />
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Play, Pause, RotateCcw, SkipForward, Settings2, Plus, Minus } from "lucide-react";
 import { saveStudySession } from "@/features/study/actions";
@@ -64,6 +65,7 @@ export function PomodoroTimer({
   todayCompletedSessions,
   onSessionComplete,
 }: PomodoroTimerProps) {
+  const router = useRouter();
   const [settings, setSettings] = useState(DEFAULTS);
   const [showSettings, setShowSettings] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -164,15 +166,25 @@ export function PomodoroTimer({
       setPhase(nextPhase);
       setSecondsLeft(getPhaseDuration(nextPhase, settings));
 
-      toast.success(`¡Pomodoro completado! ${newTotal}/${targetCount} hoy`, {
-        description: isLongBreak ? "Merecés un descanso largo 🎉" : "Tomá un descanso corto.",
-      });
+      // Goal reached on this session — mark habit as done
+      const justCompleted = newTotal >= targetCount && totalToday < targetCount;
+      if (justCompleted) {
+        toast.success("¡Meta alcanzada! Hábito completado.", {
+          description: `Completaste ${targetCount} sesión${targetCount !== 1 ? "es" : ""} hoy.`,
+          duration: 5000,
+        });
+        router.refresh();
+      } else {
+        toast.success(`¡Pomodoro completado! ${newTotal}/${targetCount} hoy`, {
+          description: isLongBreak ? "Merecés un descanso largo 🎉" : "Tomá un descanso corto.",
+        });
+      }
     } catch {
       toast.error("No se pudo guardar la sesión.");
     } finally {
       setIsSaving(false);
     }
-  }, [clearTimer, cyclesCompleted, date, habitId, onSessionComplete, targetCount, settings]);
+  }, [clearTimer, cyclesCompleted, date, habitId, onSessionComplete, targetCount, totalToday, router, settings]);
 
   useEffect(() => {
     if (!isRunning) return;

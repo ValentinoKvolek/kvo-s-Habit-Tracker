@@ -137,7 +137,6 @@ function SlotBranch({
               habit={habit}
               lineColor={lineColor}
               isLast={idx === habits.length - 1}
-              index={idx}
               readOnly={readOnly}
             />
           ))}
