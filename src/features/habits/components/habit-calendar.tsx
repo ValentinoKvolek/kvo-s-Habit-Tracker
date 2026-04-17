@@ -52,24 +52,24 @@ export function HabitCalendar({ entryDates, color }: HabitCalendarProps) {
     viewYear === today.getFullYear() && viewMonth === today.getMonth();
 
   return (
-    <div className="bg-parchment-200 border border-parchment-300 rounded-2xl p-5">
+    <div className="bg-parchment-200 dark:bg-parchment-900 border border-parchment-300 dark:border-parchment-700 rounded-2xl p-5">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={prevMonth}
-          className="p-1.5 rounded-lg text-parchment-500 hover:text-parchment-950 hover:bg-parchment-300 transition-colors"
+          className="p-1.5 rounded-lg text-parchment-500 dark:text-parchment-400 hover:text-parchment-950 dark:hover:text-parchment-100 hover:bg-parchment-300 dark:hover:bg-parchment-700 transition-colors"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
-        <span className="text-sm font-medium text-parchment-700">
+        <span className="text-sm font-medium text-parchment-700 dark:text-parchment-300">
           {MONTH_NAMES[viewMonth]} {viewYear}
         </span>
         <button
           onClick={nextMonth}
           disabled={isCurrentMonth}
-          className="p-1.5 rounded-lg text-parchment-500 hover:text-parchment-950 hover:bg-parchment-300 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          className="p-1.5 rounded-lg text-parchment-500 dark:text-parchment-400 hover:text-parchment-950 dark:hover:text-parchment-100 hover:bg-parchment-300 dark:hover:bg-parchment-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M9 18l6-6-6-6" />
@@ -80,7 +80,7 @@ export function HabitCalendar({ entryDates, color }: HabitCalendarProps) {
       {/* Day labels */}
       <div className="grid grid-cols-7 mb-2">
         {DAY_LABELS.map((d, i) => (
-          <div key={i} className="text-center text-[10px] text-parchment-500 font-medium py-1">
+          <div key={i} className="text-center text-[10px] text-parchment-500 dark:text-parchment-400 font-medium py-1">
             {d}
           </div>
         ))}
@@ -107,8 +107,8 @@ export function HabitCalendar({ entryDates, color }: HabitCalendarProps) {
                 isCompleted
                   ? "text-white"
                   : isToday
-                  ? "bg-parchment-300 text-parchment-800 ring-1 ring-parchment-400"
-                  : "text-parchment-500 hover:bg-parchment-300"
+                  ? "bg-parchment-300 dark:bg-parchment-700 text-parchment-800 dark:text-parchment-100 ring-1 ring-parchment-400 dark:ring-parchment-500"
+                  : "text-parchment-500 dark:text-parchment-400 hover:bg-parchment-300 dark:hover:bg-parchment-700"
               )}
               style={isCompleted ? { background: colorData.hex + "cc" } : {}}
             >
@@ -119,14 +119,14 @@ export function HabitCalendar({ entryDates, color }: HabitCalendarProps) {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-3 mt-4 pt-4 border-t border-parchment-300">
+      <div className="flex items-center gap-3 mt-4 pt-4 border-t border-parchment-300 dark:border-parchment-700">
         <div className="flex items-center gap-1.5">
-          <div className="w-4 h-4 rounded-sm bg-parchment-300" />
-          <span className="text-xs text-parchment-500">Sin completar</span>
+          <div className="w-4 h-4 rounded-sm bg-parchment-300 dark:bg-parchment-700" />
+          <span className="text-xs text-parchment-500 dark:text-parchment-400">Sin completar</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-4 h-4 rounded-sm" style={{ background: colorData.hex + "cc" }} />
-          <span className="text-xs text-parchment-500">Completado</span>
+          <span className="text-xs text-parchment-500 dark:text-parchment-400">Completado</span>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic, useTransition } from "react";
+import { useState, useOptimistic, useTransition } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { toggleHabitEntry, updateEntryCount } from "@/features/entries/actions";
 import { getTodayString } from "@/lib/dates";
@@ -35,8 +35,9 @@ export function CompletionButton({
   const [isPendingToggle, startToggle] = useTransition();
 
   // ── Count mode (targetCount > 1) ──────────────────────────────────────────
-  const [optimisticCount, setOptimisticCount] = useOptimistic(todayCount);
+  const [localCount, setLocalCount] = useState(todayCount);
   const [isPendingCount, startCount] = useTransition();
+  const optimisticCount = localCount;
 
   const isCountMode = targetCount > 1;
   const optimisticCountCompleted = optimisticCount >= targetCount;
@@ -65,8 +66,8 @@ export function CompletionButton({
         if (!result.success) {
           toast.error("No se pudo guardar. Intentá de nuevo.");
         } else if (result.completed && isStreakMilestone(currentStreak + 1)) {
-          toast.success(`🔥 ¡${currentStreak + 1} días seguidos!`, {
-            description: "Seguís sumando. ¡Increíble constancia!",
+          toast.success(`${currentStreak + 1} dias seguidos!`, {
+            description: "Seguis sumando. Increible constancia!",
           });
         }
       } catch {
@@ -77,19 +78,20 @@ export function CompletionButton({
 
   function handleIncrement() {
     const newCount = optimisticCountCompleted
-      ? optimisticCount - 1  // retroceder si ya está completo
-      : optimisticCount + 1; // avanzar si no está completo
+      ? localCount - 1
+      : localCount + 1;
+    setLocalCount(newCount);
     startCount(async () => {
-      setOptimisticCount(newCount);
       try {
         await updateEntryCount(habitId, today, newCount);
         if (newCount >= targetCount && isStreakMilestone(currentStreak + 1)) {
-          toast.success(`🔥 ¡${currentStreak + 1} días seguidos!`, {
-            description: "Seguís sumando. ¡Increíble constancia!",
+          toast.success(`+${currentStreak + 1} dias seguidos!`, {
+            description: "Seguis sumando. Increible constancia!",
           });
         }
       } catch {
-        toast.error("No se pudo guardar. Intentá de nuevo.");
+        setLocalCount(localCount);
+        toast.error("No se pudo guardar. Intenta de nuevo.");
       }
     });
   }

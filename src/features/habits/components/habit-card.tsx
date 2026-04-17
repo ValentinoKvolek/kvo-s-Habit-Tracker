@@ -43,10 +43,10 @@ export function HabitCard({ habit, index = 0 }: HabitCardProps) {
       <div
         className={cn(
           "relative flex items-center gap-4 p-4 rounded-2xl",
-          "bg-parchment-200 border border-parchment-300",
-          "hover:bg-parchment-300/60 hover:border-parchment-400",
+          "bg-parchment-200 dark:bg-parchment-900 border border-parchment-300 dark:border-parchment-700",
+          "hover:bg-parchment-300/60 dark:hover:bg-parchment-800 hover:border-parchment-400 dark:hover:border-parchment-600",
           "transition-all duration-200",
-          habit.isCompletedToday && "bg-parchment-300/40"
+          habit.isCompletedToday && "bg-parchment-300/40 dark:bg-parchment-800/40"
         )}
       >
         {/* Icon */}
@@ -64,14 +64,14 @@ export function HabitCard({ habit, index = 0 }: HabitCardProps) {
           <p
             className={cn(
               "font-medium text-sm leading-tight truncate",
-              habit.isCompletedToday ? "text-parchment-500 line-through" : "text-parchment-950"
+              habit.isCompletedToday ? "text-parchment-500 dark:text-parchment-400 line-through" : "text-parchment-950 dark:text-parchment-100"
             )}
           >
             {habit.name}
           </p>
           {habit.currentStreak > 0 && (
             <p className="text-xs mt-0.5" style={{ color: color.hex }}>
-              🔥 {habit.currentStreak}{" "}
+              {habit.currentStreak}{" "}
               {habit.currentStreak === 1 ? "día seguido" : "días seguidos"}
             </p>
           )}

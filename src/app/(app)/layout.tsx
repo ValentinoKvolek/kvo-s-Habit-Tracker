@@ -17,7 +17,7 @@ export default async function AppLayout({
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
-    redirect("/login");
+    redirect("/login?expired=1");
   }
 
   // Lightweight query: only habits with a reminder time set

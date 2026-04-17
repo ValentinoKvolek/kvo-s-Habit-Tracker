@@ -60,7 +60,7 @@ export default async function HabitDetailPage({ params }: Props) {
         <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/dashboard"
-            className="p-2 rounded-xl text-parchment-500 hover:text-parchment-950 hover:bg-parchment-200 transition-colors flex-shrink-0"
+            className="p-2 rounded-xl text-parchment-500 dark:text-parchment-400 hover:text-parchment-950 dark:hover:text-parchment-100 hover:bg-parchment-200 dark:hover:bg-parchment-800 transition-colors flex-shrink-0"
           >
             <ArrowLeft size={18} />
           </Link>
@@ -71,29 +71,29 @@ export default async function HabitDetailPage({ params }: Props) {
             <HabitIcons icon={habit.icon} color={colorData.hex} size={18} />
           </div>
           <div className="min-w-0">
-            <h1 className="text-lg sm:text-xl font-bold text-parchment-950 leading-tight truncate">
+            <h1 className="text-lg sm:text-xl font-bold text-parchment-950 dark:text-parchment-100 leading-tight truncate">
               {habit.name}
             </h1>
             {habit.description && (
-              <p className="text-xs sm:text-sm text-parchment-500 mt-0.5 truncate">{habit.description}</p>
+              <p className="text-xs sm:text-sm text-parchment-500 dark:text-parchment-400 mt-0.5 truncate">{habit.description}</p>
             )}
           </div>
         </div>
         <Link
           href={`/habits/${id}/edit`}
-          className="p-2 rounded-xl text-parchment-400 hover:text-parchment-950 hover:bg-parchment-200 transition-colors flex-shrink-0"
+          className="p-2 rounded-xl text-parchment-400 dark:text-parchment-500 hover:text-parchment-950 dark:hover:text-parchment-100 hover:bg-parchment-200 dark:hover:bg-parchment-800 transition-colors flex-shrink-0"
         >
           <Pencil size={16} />
         </Link>
       </div>
 
       {/* Completion button — marcar hoy */}
-      <div className="flex items-center justify-between bg-parchment-200 border border-parchment-300 rounded-2xl p-4 mb-6">
+      <div className="flex items-center justify-between bg-parchment-200 dark:bg-parchment-900 border border-parchment-300 dark:border-parchment-700 rounded-2xl p-4 mb-6">
         <div>
-          <p className="text-sm font-medium text-parchment-950">
+          <p className="text-sm font-medium text-parchment-950 dark:text-parchment-100">
             {isCompletedToday ? "Completado hoy" : "Marcar como hecho hoy"}
           </p>
-          <p className="text-xs text-parchment-500 mt-0.5">
+          <p className="text-xs text-parchment-500 dark:text-parchment-400 mt-0.5">
             {isCompletedToday
               ? "¡Bien hecho! Podés desmarcar si fue un error."
               : "Registrá tu progreso de hoy."}
@@ -111,7 +111,7 @@ export default async function HabitDetailPage({ params }: Props) {
 
       {/* Stats */}
       <section className="mb-6">
-        <h2 className="text-sm font-medium text-parchment-500 uppercase tracking-wider mb-3">
+        <h2 className="text-sm font-medium text-parchment-500 dark:text-parchment-400 uppercase tracking-wider mb-3">
           Estadísticas
         </h2>
         <HabitStatCard
@@ -162,7 +162,7 @@ export default async function HabitDetailPage({ params }: Props) {
 
       {/* Calendar */}
       <section className="mb-6">
-        <h2 className="text-sm font-medium text-parchment-500 uppercase tracking-wider mb-3">
+        <h2 className="text-sm font-medium text-parchment-500 dark:text-parchment-400 uppercase tracking-wider mb-3">
           Historial
         </h2>
         <HabitCalendar
@@ -172,10 +172,10 @@ export default async function HabitDetailPage({ params }: Props) {
       </section>
 
       {/* Edit link */}
-      <section className="mt-8 pt-6 border-t border-parchment-300">
+      <section className="mt-8 pt-6 border-t border-parchment-300 dark:border-parchment-700">
         <Link
           href={`/habits/${id}/edit`}
-          className="text-sm text-parchment-400 hover:text-parchment-700 transition-colors"
+          className="text-sm text-parchment-400 dark:text-parchment-500 hover:text-parchment-700 dark:hover:text-parchment-300 transition-colors"
         >
           Editar o archivar este hábito →
         </Link>

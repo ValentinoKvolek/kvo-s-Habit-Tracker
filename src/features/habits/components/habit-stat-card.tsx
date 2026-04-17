@@ -40,9 +40,9 @@ export function HabitStatCard({
         {stats.map(({ label, value, unit }) => (
           <div
             key={label}
-            className="bg-parchment-200 border border-parchment-300 rounded-2xl p-4"
+            className="bg-parchment-200 dark:bg-parchment-900 border border-parchment-300 dark:border-parchment-700 rounded-2xl p-4"
           >
-            <p className="text-xs text-parchment-500 mb-1">{label}</p>
+            <p className="text-xs text-parchment-500 dark:text-parchment-400 mb-1">{label}</p>
             <p className="text-2xl font-bold" style={{ color: colorData.hex }}>
               {value}
               {unit && <span className="text-sm font-normal text-parchment-500 ml-1">{unit}</span>}
@@ -55,10 +55,10 @@ export function HabitStatCard({
       <div className="bg-parchment-200 border border-parchment-300 rounded-2xl p-4">
         <div className="flex items-start justify-between mb-3">
           <div>
-            <p className="text-sm font-semibold text-parchment-950">
+            <p className="text-sm font-semibold text-parchment-950 dark:text-parchment-100">
               {isFormed ? "¡Hábito formado! 🎉" : `${daysLeft} días para formar el hábito`}
             </p>
-            <p className="text-xs text-parchment-500 mt-0.5">
+            <p className="text-xs text-parchment-500 dark:text-parchment-400 mt-0.5">
               {totalDays} de {HABIT_THRESHOLD} días completados
             </p>
           </div>
@@ -71,7 +71,7 @@ export function HabitStatCard({
         </div>
 
         {/* Progress bar */}
-        <div className="h-2 rounded-full bg-parchment-300 overflow-hidden mb-3">
+        <div className="h-2 rounded-full bg-parchment-300 dark:bg-parchment-700 overflow-hidden mb-3">
           <div
             className="h-full rounded-full transition-all duration-700"
             style={{
@@ -94,16 +94,16 @@ export function HabitStatCard({
                     borderColor: reached ? colorData.hex : "#b09a7e",
                   }}
                 />
-                <span className="text-[10px] text-parchment-500">{milestone}d</span>
+                <span className="text-[10px] text-parchment-500 dark:text-parchment-400">{milestone}d</span>
               </div>
             );
           })}
         </div>
 
         {/* Info box */}
-        <div className="bg-parchment-100 border border-parchment-300 rounded-xl p-3">
-          <p className="text-[11px] text-parchment-600 leading-relaxed">
-            <span className="font-semibold text-parchment-800">¿Por qué 21 días?</span>{" "}
+        <div className="bg-parchment-100 dark:bg-parchment-800 border border-parchment-300 dark:border-parchment-600 rounded-xl p-3">
+          <p className="text-[11px] text-parchment-600 dark:text-parchment-300 leading-relaxed">
+            <span className="font-semibold text-parchment-800 dark:text-parchment-200">¿Por qué 21 días?</span>{" "}
             El Dr. Maxwell Maltz observó en 1960 que sus pacientes tardaban al menos 21 días en adaptarse a un cambio.
             James Clear retoma este concepto en{" "}
             <span className="italic">Hábitos Atómicos</span> para explicar que la repetición

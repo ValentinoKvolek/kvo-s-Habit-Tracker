@@ -18,8 +18,10 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect authenticated users away from auth pages
+  // Only redirect if there's no ?expired param (which means the session was invalid)
   if (
     sessionToken &&
+    !request.nextUrl.searchParams.has("expired") &&
     (pathname === "/login" || pathname === "/register" || pathname === "/")
   ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));

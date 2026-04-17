@@ -47,147 +47,6 @@ function getColor(color: string): string {
   return HABIT_COLOR_MAP[color as HabitColor]?.hex ?? "#8b4513";
 }
 
-// ─── Marble Bust ─────────────────────────────────────────────────────────────
-
-function MarbleBust() {
-  return (
-    <div className="flex flex-col items-center select-none">
-      <style>{`
-        @keyframes bust-sway {
-          0%,100% { transform: perspective(700px) rotateY(-10deg) rotateX(3deg); }
-          50%      { transform: perspective(700px) rotateY(10deg)  rotateX(-2deg); }
-        }
-        @keyframes bust-glow {
-          0%,100% { opacity: 0.18; }
-          50%      { opacity: 0.32; }
-        }
-        .bust-sway { animation: bust-sway 9s ease-in-out infinite; transform-style: preserve-3d; }
-        .bust-glow { animation: bust-glow 4s ease-in-out infinite; }
-      `}</style>
-
-      <div className="bust-sway">
-        <svg viewBox="0 0 200 280" width="160" height="224" aria-hidden="true">
-          <defs>
-            <linearGradient id="mg-face" x1="25%" y1="0%" x2="85%" y2="100%">
-              <stop offset="0%"   stopColor="#f0ece4" />
-              <stop offset="45%"  stopColor="#ddd5c8" />
-              <stop offset="80%"  stopColor="#c8bfb0" />
-              <stop offset="100%" stopColor="#b5aa9a" />
-            </linearGradient>
-            <linearGradient id="mg-body" x1="20%" y1="0%" x2="90%" y2="100%">
-              <stop offset="0%"   stopColor="#e8e0d4" />
-              <stop offset="50%"  stopColor="#cfc5b5" />
-              <stop offset="100%" stopColor="#b0a595" />
-            </linearGradient>
-            <linearGradient id="mg-plinth" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%"   stopColor="#d5cdc0" />
-              <stop offset="100%" stopColor="#a89f90" />
-            </linearGradient>
-            <linearGradient id="mg-highlight" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%"  stopColor="white" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="white" stopOpacity="0" />
-            </linearGradient>
-            <filter id="bust-drop" x="-20%" y="-10%" width="140%" height="140%">
-              <feDropShadow dx="5" dy="10" stdDeviation="8"
-                floodColor="#1c1510" floodOpacity="0.22" />
-            </filter>
-            <filter id="face-shadow" x="-10%" y="-10%" width="120%" height="120%">
-              <feDropShadow dx="2" dy="3" stdDeviation="3"
-                floodColor="#1c1510" floodOpacity="0.15" />
-            </filter>
-          </defs>
-
-          {/* ── Plinth base ── */}
-          <rect x="22" y="248" width="156" height="28" rx="3"
-            fill="url(#mg-plinth)"
-            style={{ filter: "drop-shadow(0 2px 5px rgba(28,21,16,0.25))" }} />
-          <rect x="32" y="233" width="136" height="18" rx="2" fill="url(#mg-plinth)" />
-
-          {/* ── Toga / torso ── */}
-          <path d="M52,222 L47,233 L153,233 L148,222 L135,155 L65,155 Z"
-            fill="url(#mg-body)" filter="url(#bust-drop)" />
-
-          {/* Toga folds left */}
-          <path d="M52,222 Q46,207 50,190 Q52,175 58,165 L65,155 L65,180 Q60,195 56,210 Z"
-            fill="#b8ae9f" opacity="0.7" />
-          {/* Toga folds right */}
-          <path d="M148,222 Q154,207 150,190 Q148,175 142,165 L135,155 L135,180 Q140,195 144,210 Z"
-            fill="#b8ae9f" opacity="0.7" />
-          {/* Toga draped line */}
-          <path d="M65,155 Q80,148 100,147 Q120,148 135,155" stroke="#a09080"
-            strokeWidth="1.5" fill="none" opacity="0.5" />
-
-          {/* ── Shoulders ── */}
-          <path d="M43,190 Q33,178 38,160 L65,155 L65,195 Q55,193 43,190 Z"
-            fill="url(#mg-body)" />
-          <path d="M157,190 Q167,178 162,160 L135,155 L135,195 Q145,193 157,190 Z"
-            fill="url(#mg-body)" />
-
-          {/* ── Neck ── */}
-          <rect x="88" y="118" width="24" height="40" rx="5"
-            fill="url(#mg-face)" />
-
-          {/* ── Head ── */}
-          <ellipse cx="100" cy="86" rx="40" ry="46"
-            fill="url(#mg-face)" filter="url(#face-shadow)" />
-
-          {/* Hair */}
-          <path d="M61,74 Q60,48 100,44 Q140,48 139,74 Q130,60 100,58 Q70,60 61,74 Z"
-            fill="#c0b5a3" />
-          {/* Laurel wreath hints */}
-          <path d="M63,72 Q59,63 66,60 Q70,59 68,67" fill="#9a8c6a" opacity="0.45" />
-          <path d="M72,63 Q70,54 77,52 Q81,51 79,60" fill="#9a8c6a" opacity="0.45" />
-          <path d="M83,58 Q82,49 89,48 Q93,47 92,56" fill="#9a8c6a" opacity="0.35" />
-          <path d="M137,72 Q141,63 134,60 Q130,59 132,67" fill="#9a8c6a" opacity="0.45" />
-          <path d="M128,63 Q130,54 123,52 Q119,51 121,60" fill="#9a8c6a" opacity="0.45" />
-          <path d="M117,58 Q118,49 111,48 Q107,47 108,56" fill="#9a8c6a" opacity="0.35" />
-
-          {/* Eye sockets — subtle */}
-          <ellipse cx="85"  cy="85" rx="8" ry="6" fill="#b8ae9e" opacity="0.38" />
-          <ellipse cx="115" cy="85" rx="8" ry="6" fill="#b8ae9e" opacity="0.38" />
-          {/* Pupils */}
-          <ellipse cx="85"  cy="86" rx="3.5" ry="3" fill="#8c7d6a" opacity="0.55" />
-          <ellipse cx="115" cy="86" rx="3.5" ry="3" fill="#8c7d6a" opacity="0.55" />
-
-          {/* Nose */}
-          <path d="M100,78 L97,99 Q100,102 103,99 L100,78"
-            fill="#c2b8a8" stroke="#a89e8e" strokeWidth="0.5" />
-
-          {/* Brow ridge */}
-          <path d="M78,79 Q85,76 92,79" stroke="#a89e8e" strokeWidth="1.2"
-            fill="none" strokeLinecap="round" opacity="0.6" />
-          <path d="M108,79 Q115,76 122,79" stroke="#a89e8e" strokeWidth="1.2"
-            fill="none" strokeLinecap="round" opacity="0.6" />
-
-          {/* Mouth */}
-          <path d="M92,108 Q100,112 108,108"
-            stroke="#9e9080" strokeWidth="1.5" fill="none"
-            strokeLinecap="round" opacity="0.6" />
-          <path d="M95,108 Q100,105 105,108"
-            stroke="#9e9080" strokeWidth="1" fill="none"
-            strokeLinecap="round" opacity="0.4" />
-
-          {/* ── Highlight gloss ── */}
-          <ellipse cx="80" cy="68" rx="14" ry="18"
-            fill="url(#mg-highlight)" className="bust-glow" />
-          <ellipse cx="75" cy="170" rx="8" ry="20"
-            fill="url(#mg-highlight)" opacity="0.2" />
-        </svg>
-      </div>
-
-      {/* Label on plinth */}
-      <div className="mt-1 text-center">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-parchment-500 dark:text-parchment-400">
-          Marcus Aurelius
-        </p>
-        <p className="text-[9px] text-parchment-400 dark:text-parchment-500 tracking-wide">
-          121–180 d.C.
-        </p>
-      </div>
-    </div>
-  );
-}
-
 // ─── Today ring ───────────────────────────────────────────────────────────────
 
 function TodayRing({ pct, done, total }: { pct: number; done: number; total: number }) {
@@ -210,7 +69,7 @@ function TodayRing({ pct, done, total }: { pct: number; done: number; total: num
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5">
         <motion.span
-          className="text-2xl font-serif font-bold text-parchment-950 dark:text-parchment-100 leading-none"
+          className="text-2xl font-serif font-bold text-parchment-950 dark:text-parchment-50 leading-none"
           initial={{ opacity: 0, scale: 0.7 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, duration: 0.4, type: "spring" }}
@@ -278,16 +137,18 @@ function CategoryDonut({ habits }: { habits: HabitOverviewItem[] }) {
           <path key={i} d={s.d} fill={s.color} opacity={0.82} />
         ))}
         <text x={cx} y={cy - 3} textAnchor="middle" fill="currentColor"
+          className="fill-parchment-950 dark:fill-parchment-50"
           fontSize={13} fontFamily="var(--font-serif)" fontWeight="700">{habits.length}</text>
-        <text x={cx} y={cy + 10} textAnchor="middle" fill="currentColor"
-          fontSize={7} opacity={0.5} fontFamily="var(--font-sans)">hábitos</text>
+        <text x={cx} y={cy + 10} textAnchor="middle"
+          className="fill-parchment-500 dark:fill-parchment-300"
+          fontSize={7} fontFamily="var(--font-sans)">hábitos</text>
       </svg>
       <div className="flex flex-col gap-1.5 flex-1">
         {segs.map((s, i) => s && (
           <div key={i} className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: s.color }} />
-            <span className="text-xs text-parchment-600 dark:text-parchment-300 flex-1">{s.label}</span>
-            <span className="text-xs font-medium text-parchment-400 dark:text-parchment-500">{s.cnt}</span>
+            <span className="text-xs text-parchment-600 dark:text-parchment-200 flex-1">{s.label}</span>
+            <span className="text-xs font-medium text-parchment-400 dark:text-parchment-300">{s.cnt}</span>
           </div>
         ))}
       </div>
@@ -354,13 +215,13 @@ export function HabitsOverview({ habits, completedToday, totalToday, userName }:
       >
         <TodayRing pct={pct} done={completedToday} total={totalToday} />
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-500 mb-1">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-300 mb-1">
             Hoy
           </p>
-          <h1 className="text-xl font-serif font-bold text-parchment-950 dark:text-parchment-100 leading-tight mb-1.5">
+          <h1 className="text-xl font-serif font-bold text-parchment-950 dark:text-parchment-50 leading-tight mb-1.5">
             {allDone ? "Virtud consumada ✦" : `Hola, ${userName}`}
           </h1>
-          <p className="text-xs text-parchment-500 dark:text-parchment-400 mb-4 leading-relaxed">
+          <p className="text-xs text-parchment-500 dark:text-parchment-300 mb-4 leading-relaxed">
             {allDone
               ? "Completaste todos los hábitos de hoy."
               : totalToday === 0
@@ -376,32 +237,15 @@ export function HabitsOverview({ habits, completedToday, totalToday, userName }:
         </div>
       </motion.section>
 
-      {/* ── MARBLE BUST ── */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        className="mb-10 flex flex-col items-center py-6 rounded-2xl bg-gradient-to-b from-parchment-200/60 dark:from-parchment-900/60 to-transparent border border-parchment-300 dark:border-parchment-700"
-      >
-        <MarbleBust />
-        <blockquote className="mt-4 px-6 text-center max-w-xs">
-          <p className="text-sm font-serif italic text-parchment-700 dark:text-parchment-300 leading-relaxed">
-            "El obstáculo es el camino."
-          </p>
-          <footer className="mt-1.5 text-[10px] uppercase tracking-widest text-parchment-400 dark:text-parchment-500">
-            Meditaciones · Marco Aurelio
-          </footer>
-        </blockquote>
-      </motion.section>
 
       {/* ── HABIT LIST ── */}
       {habits.length > 0 && (
         <section className="mb-10">
           <div className="flex items-center justify-between mb-4 px-1">
-            <h2 className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-500">
+            <h2 className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-300">
               Tus Hábitos
             </h2>
-            <span className="text-[10px] text-parchment-400 dark:text-parchment-500">← 7 días</span>
+            <span className="text-[10px] text-parchment-400 dark:text-parchment-300">← 7 días</span>
           </div>
           <div className="flex flex-col gap-2">
             {habits.map((h, i) => {
@@ -420,7 +264,7 @@ export function HabitsOverview({ habits, completedToday, totalToday, userName }:
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-sm font-medium text-parchment-900 dark:text-parchment-100 truncate">
+                        <span className="text-sm font-medium text-parchment-900 dark:text-parchment-50 truncate">
                           {h.name}
                         </span>
                         {h.currentStreak > 0 && (
@@ -482,13 +326,13 @@ export function HabitsOverview({ habits, completedToday, totalToday, userName }:
           className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4"
         >
           <div className="rounded-2xl bg-parchment-100 dark:bg-parchment-900 border border-parchment-200 dark:border-parchment-700 p-5">
-            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-500 mb-4">
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-300 mb-4">
               Por categoría
             </h3>
             <CategoryDonut habits={habits} />
           </div>
           <div className="rounded-2xl bg-parchment-100 dark:bg-parchment-900 border border-parchment-200 dark:border-parchment-700 p-5">
-            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-500 mb-4">
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-300 mb-4">
               Completados · 7 días
             </h3>
             <WeekBars habits={habits} />
@@ -513,12 +357,12 @@ export function HabitsOverview({ habits, completedToday, totalToday, userName }:
           <div className="flex flex-col gap-3">
             {topStreaks.map((h, i) => {
               const color = getColor(h.color);
-              const medals = ["🥇", "🥈", "🥉"];
+              const rankColors = ["#b07a30", "#8d7a62", "#6b5c48"];
               return (
                 <Link key={h.id} href={`/habits/${h.id}`} className="flex items-center gap-3 group">
-                  <span className="text-base leading-none w-5 flex-shrink-0">{medals[i]}</span>
+                  <span className="text-[11px] font-bold w-5 flex-shrink-0 text-center" style={{ color: rankColors[i] }}>{i + 1}</span>
                   <div className="w-1.5 h-5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-                  <span className="flex-1 text-sm text-parchment-800 dark:text-parchment-200 truncate group-hover:text-parchment-950 dark:group-hover:text-parchment-100 transition-colors">
+                  <span className="flex-1 text-sm text-parchment-800 dark:text-parchment-100 truncate group-hover:text-parchment-950 dark:group-hover:text-parchment-50 transition-colors">
                     {h.name}
                   </span>
                   <span className="text-xs font-bold flex-shrink-0 flex items-center gap-1" style={{ color }}>
