@@ -28,7 +28,7 @@ export async function createHabit(input: HabitInput) {
   const maxOrder =
     existing.length > 0 ? existing[existing.length - 1].sortOrder : -1;
 
-  await db.insert(habit).values({
+  const [newHabit] = await db.insert(habit).values({
     userId: session.user.id,
     name: data.name,
     description: data.description ?? null,
@@ -42,10 +42,10 @@ export async function createHabit(input: HabitInput) {
     sportType: data.category === "sport" ? (data.sportType ?? null) : null,
     reminderTime: data.reminderTime || null,
     timeSlot: data.timeSlot ?? null,
-  });
+  }).returning({ id: habit.id });
 
   revalidatePath("/dashboard");
-  return { success: true };
+  return { success: true, id: newHabit.id };
 }
 
 export async function updateHabit(habitId: string, input: HabitInput) {

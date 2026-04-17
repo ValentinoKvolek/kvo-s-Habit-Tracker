@@ -45,9 +45,9 @@ export function HabitForm({ mode, habitId, defaultValues }: HabitFormProps) {
     setIsLoading(true);
     try {
       if (mode === "create") {
-        await createHabit(data);
+        const result = await createHabit(data);
         toast.success("¡Hábito creado! Empezá hoy.");
-        router.push("/dashboard");
+        router.push(`/habits/${result.id}`);
       } else if (habitId) {
         await updateHabit(habitId, data);
         toast.success("Hábito actualizado.");
