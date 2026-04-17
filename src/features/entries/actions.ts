@@ -38,8 +38,6 @@ export async function toggleHabitEntry(
 
   if (existing.length > 0) {
     await db.delete(habitEntry).where(eq(habitEntry.id, existing[0].id));
-    revalidatePath("/dashboard");
-    revalidatePath(`/habits/${habitId}`);
     return { success: true, completed: false };
   } else {
     await db.insert(habitEntry).values({
@@ -48,8 +46,6 @@ export async function toggleHabitEntry(
       date,
       count: 1,
     });
-    revalidatePath("/dashboard");
-    revalidatePath(`/habits/${habitId}`);
     return { success: true, completed: true };
   }
 }
@@ -125,6 +121,5 @@ export async function updateEntryCount(
     }
   }
 
-  revalidatePath("/dashboard");
   return { success: true };
 }

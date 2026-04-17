@@ -83,26 +83,24 @@ export function AddTaskForm({ lists, defaultListId }: AddTaskFormProps) {
           />
         </div>
 
-        {lists.length > 0 && (
-          <div className="relative">
-            <select
-              value={listId ?? ""}
-              onChange={(e) => setListId(e.target.value || null)}
-              disabled={isPending}
-              className="text-xs bg-transparent border-none outline-none cursor-pointer appearance-none pr-4
-                         disabled:opacity-60 focus:outline-none"
-              style={{ color: selectedList ? getListColor(selectedList.color) : "#a09080" }}
-            >
-              <option value="">Sin lista</option>
-              {lists.map((l) => (
-                <option key={l.id} value={l.id}>
-                  {l.name}
-                </option>
-              ))}
-            </select>
-            <ChevronDown size={10} className="absolute right-0 top-1/2 -translate-y-1/2 text-parchment-400 pointer-events-none" />
-          </div>
-        )}
+        <div className="relative">
+          <select
+            value={listId ?? ""}
+            onChange={(e) => setListId(e.target.value || null)}
+            disabled={isPending}
+            className="text-xs bg-transparent border-none outline-none cursor-pointer appearance-none pr-4
+                       disabled:opacity-60 focus:outline-none"
+            style={{ color: selectedList ? getListColor(selectedList.color) : "#a09080" }}
+          >
+            <option value="">Sin lista</option>
+            {lists.map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.name}
+              </option>
+            ))}
+          </select>
+          <ChevronDown size={10} className="absolute right-0 top-1/2 -translate-y-1/2 text-parchment-400 pointer-events-none" />
+        </div>
       </div>
     </form>
   );
