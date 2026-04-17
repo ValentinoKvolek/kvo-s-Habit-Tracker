@@ -1,27 +1,29 @@
 "use client";
 
 import { useTransition } from "react";
-import { motion } from "motion/react";
 import { Trash2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { completeTask, uncompleteTask, deleteTask } from "@/features/tasks/actions";
-import type { Task } from "@/db/schema";
+import { LIST_COLORS } from "./new-list-form";
+import type { TaskWithList } from "@/features/tasks/queries";
 
-interface TaskItemProps {
-  task: Task;
+function getListColor(color: string) {
+  return LIST_COLORS.find((c) => c.id === color)?.hex ?? "#8b4513";
 }
 
-export function TaskItem({ task }: TaskItemProps) {
+interface TaskItemProps {
+  task: TaskWithList;
+  showList?: boolean;
+}
+
+export function TaskItem({ task, showList = false }: TaskItemProps) {
   const [isPending, startTransition] = useTransition();
 
   function handleToggle() {
     startTransition(async () => {
       try {
-        if (task.isCompleted) {
-          await uncompleteTask(task.id);
-        } else {
-          await completeTask(task.id);
-        }
+        if (task.isCompleted) await uncompleteTask(task.id);
+        else await completeTask(task.id);
       } catch {
         toast.error("No se pudo actualizar la tarea.");
       }
@@ -39,23 +41,16 @@ export function TaskItem({ task }: TaskItemProps) {
   }
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: -6 }}
-      animate={{ opacity: isPending ? 0.5 : 1, y: 0 }}
-      exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-      transition={{ duration: 0.18 }}
+    <div
       className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-parchment-100 border border-parchment-300 group"
+      style={{ opacity: isPending ? 0.5 : 1 }}
     >
-      {/* Checkbox */}
       <button
         type="button"
         onClick={handleToggle}
         disabled={isPending}
         aria-label={task.isCompleted ? "Marcar como pendiente" : "Completar tarea"}
-        className="flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors
-                   disabled:cursor-not-allowed
-                   border-parchment-400 hover:border-sienna-500"
+        className="flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors disabled:cursor-not-allowed border-parchment-400 hover:border-sienna-500"
         style={task.isCompleted ? { backgroundColor: "#8B4513", borderColor: "#8B4513" } : {}}
       >
         {task.isCompleted && (
@@ -65,15 +60,23 @@ export function TaskItem({ task }: TaskItemProps) {
         )}
       </button>
 
-      {/* Name */}
-      <span
-        className="flex-1 text-sm text-parchment-900 leading-snug"
-        style={task.isCompleted ? { textDecoration: "line-through", color: "#a09080" } : {}}
-      >
-        {task.name}
-      </span>
+      <div className="flex-1 min-w-0">
+        <span
+          className="text-sm text-parchment-900 leading-snug block truncate"
+          style={task.isCompleted ? { textDecoration: "line-through", color: "#a09080" } : {}}
+        >
+          {task.name}
+        </span>
+        {showList && task.list && (
+          <span
+            className="text-[10px] font-medium mt-0.5 block"
+            style={{ color: getListColor(task.list.color) }}
+          >
+            {task.list.name}
+          </span>
+        )}
+      </div>
 
-      {/* Actions */}
       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         {task.isCompleted && (
           <button
@@ -96,6 +99,6 @@ export function TaskItem({ task }: TaskItemProps) {
           <Trash2 size={13} />
         </button>
       </div>
-    </motion.div>
+    </div>
   );
 }

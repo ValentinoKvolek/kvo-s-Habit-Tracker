@@ -2,27 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Plus, Settings, ClipboardList } from "lucide-react";
+import { LayoutDashboard, Flame, ClipboardList, Settings } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { signOut } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/habits", label: "Hábitos", icon: Flame },
   { href: "/tasks", label: "Tareas", icon: ClipboardList },
-  { href: "/habits/new", label: "Nuevo hábito", icon: Plus },
-  { href: "/settings", label: "Ajustes", icon: Settings },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
-
-  async function handleSignOut() {
-    await signOut();
-    router.push("/login");
-  }
 
   return (
     <aside className="hidden md:flex flex-col w-56 min-h-screen bg-parchment-200 border-r border-parchment-300 p-4 fixed left-0 top-0 bottom-0 z-40">
@@ -34,37 +25,43 @@ export function Sidebar() {
 
       {/* Nav */}
       <nav className="flex flex-col gap-0.5 flex-1">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
-          <Link
-            key={href}
-            href={href}
-            className={cn(
-              "flex items-center gap-2.5 px-3 py-2 rounded-sm text-sm font-sans transition-all duration-150",
-              pathname.startsWith(href) && href !== "/habits/new"
-                ? "bg-parchment-300 text-parchment-950 font-medium"
-                : "text-parchment-600 hover:text-parchment-950 hover:bg-parchment-300/60"
-            )}
-          >
-            <Icon size={15} />
-            {label}
-          </Link>
-        ))}
+        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+          const isActive = href === "/habits"
+            ? pathname.startsWith("/habits") || (pathname === "/dashboard" && false)
+            : pathname.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                "flex items-center gap-2.5 px-3 py-2 rounded-sm text-sm font-sans transition-all duration-150",
+                isActive
+                  ? "bg-parchment-300 text-parchment-950 font-medium"
+                  : "text-parchment-600 hover:text-parchment-950 hover:bg-parchment-300/60"
+              )}
+            >
+              <Icon size={15} />
+              {label}
+            </Link>
+          );
+        })}
       </nav>
 
-      {/* Theme toggle + Sign out */}
+      {/* Bottom: theme toggle + settings */}
       <div className="flex items-center justify-between mt-4 px-1">
         <ThemeToggle />
-        <button
-          onClick={handleSignOut}
-          className="flex items-center gap-2 px-2 py-2 rounded-sm text-xs font-sans text-parchment-500 hover:text-parchment-800 hover:bg-parchment-300/60 transition-all duration-150"
+        <Link
+          href="/settings"
+          className={cn(
+            "flex items-center gap-2 px-2 py-2 rounded-sm text-xs font-sans transition-all duration-150",
+            pathname.startsWith("/settings")
+              ? "text-parchment-950 bg-parchment-300"
+              : "text-parchment-500 hover:text-parchment-800 hover:bg-parchment-300/60"
+          )}
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
-          Salir
-        </button>
+          <Settings size={13} />
+          Ajustes
+        </Link>
       </div>
     </aside>
   );

@@ -1,29 +1,40 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import { Plus, Calendar } from "lucide-react";
+import { Plus, Calendar, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { createTask } from "@/features/tasks/actions";
+import { LIST_COLORS } from "./new-list-form";
+import type { TaskList } from "@/db/schema";
 
 function todayString() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-export function AddTaskForm() {
+function getListColor(color: string) {
+  return LIST_COLORS.find((c) => c.id === color)?.hex ?? "#8b4513";
+}
+
+interface AddTaskFormProps {
+  lists: TaskList[];
+  defaultListId?: string | null;
+}
+
+export function AddTaskForm({ lists, defaultListId }: AddTaskFormProps) {
   const [isPending, startTransition] = useTransition();
   const [name, setName] = useState("");
   const [date, setDate] = useState(todayString());
+  const [listId, setListId] = useState<string | null>(defaultListId ?? null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return;
-
     startTransition(async () => {
       try {
-        await createTask({ name: trimmed, scheduledDate: date || null });
+        await createTask({ name: trimmed, scheduledDate: date || null, listId });
         setName("");
         inputRef.current?.focus();
       } catch {
@@ -31,6 +42,8 @@ export function AddTaskForm() {
       }
     });
   }
+
+  const selectedList = lists.find((l) => l.id === listId);
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
@@ -57,17 +70,39 @@ export function AddTaskForm() {
         </button>
       </div>
 
-      {/* Date picker */}
-      <div className="flex items-center gap-2 px-1">
-        <Calendar size={13} className="text-parchment-400 flex-shrink-0" />
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          disabled={isPending}
-          className="text-xs text-parchment-600 bg-transparent border-none outline-none
-                     focus:text-parchment-950 cursor-pointer disabled:opacity-60"
-        />
+      <div className="flex items-center gap-3 px-1">
+        <div className="flex items-center gap-1.5">
+          <Calendar size={13} className="text-parchment-400 flex-shrink-0" />
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            disabled={isPending}
+            className="text-xs text-parchment-600 bg-transparent border-none outline-none
+                       focus:text-parchment-950 cursor-pointer disabled:opacity-60"
+          />
+        </div>
+
+        {lists.length > 0 && (
+          <div className="relative">
+            <select
+              value={listId ?? ""}
+              onChange={(e) => setListId(e.target.value || null)}
+              disabled={isPending}
+              className="text-xs bg-transparent border-none outline-none cursor-pointer appearance-none pr-4
+                         disabled:opacity-60 focus:outline-none"
+              style={{ color: selectedList ? getListColor(selectedList.color) : "#a09080" }}
+            >
+              <option value="">Sin lista</option>
+              {lists.map((l) => (
+                <option key={l.id} value={l.id}>
+                  {l.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown size={10} className="absolute right-0 top-1/2 -translate-y-1/2 text-parchment-400 pointer-events-none" />
+          </div>
+        )}
       </div>
     </form>
   );
