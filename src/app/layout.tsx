@@ -42,6 +42,7 @@ export default function RootLayout({
     <html lang="es" className={`${playfair.variable} ${inter.variable}`} suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#8b4513" />
+        <link rel="icon" href="/logo.png" type="image/png" />
         <link rel="apple-touch-icon" href="/logo.png" />
         {/* Blocking script — applies .dark before first paint to prevent flash */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme'),d=window.matchMedia('(prefers-color-scheme:dark)').matches;if(t==='dark'||(t!=='light'&&d)){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}}catch(e){}})();` }} />
