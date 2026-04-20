@@ -15,7 +15,7 @@ import { WorkoutHistory } from "@/features/workouts/components/workout-history";
 import { PomodoroTimer } from "@/features/study/components/pomodoro-timer";
 import { StudyHistory } from "@/features/study/components/study-history";
 import { getHabitColor } from "@/lib/colors";
-import { calculateCurrentStreak, calculateLongestStreak } from "@/features/entries/logic";
+import { calculateCurrentStreak, calculateLongestStreak, calculateVirtusScore } from "@/features/entries/logic";
 import { getTodayString } from "@/lib/dates";
 import type { HabitColor } from "@/db/schema";
 
@@ -37,6 +37,7 @@ export default async function HabitDetailPage({ params }: Props) {
   const entryDateSet = new Set(allDates);
   const currentStreak = calculateCurrentStreak(allDates);
   const longestStreak = calculateLongestStreak(allDates);
+  const virtusScore = calculateVirtusScore(allDates);
   const colorData = getHabitColor(habit.color as HabitColor);
 
   const todayEntry = entries.find((e) => e.date === today);
@@ -118,6 +119,7 @@ export default async function HabitDetailPage({ params }: Props) {
           allDates={allDates}
           currentStreak={currentStreak}
           longestStreak={longestStreak}
+          virtusScore={virtusScore}
           color={habit.color as HabitColor}
         />
       </section>

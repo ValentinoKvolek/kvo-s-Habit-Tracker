@@ -51,6 +51,7 @@ export default async function HabitsPage() {
       color: h.color,
       category: h.category,
       currentStreak: h.currentStreak,
+      virtusScore: h.virtusScore,
       isCompletedToday: h.isCompletedToday,
       weekCompletion,
     };

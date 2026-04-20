@@ -18,4 +18,5 @@ export type HabitWithMeta = {
   isCompletedToday: boolean;
   todayCount: number;
   currentStreak: number;
+  virtusScore: number;
 };

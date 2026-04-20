@@ -2,7 +2,7 @@ import { eq, and, asc } from "drizzle-orm";
 import { db } from "@/db";
 import { habit, habitEntry } from "@/db/schema";
 import { getTodayString } from "@/lib/dates";
-import { calculateCurrentStreak } from "@/features/entries/logic";
+import { calculateCurrentStreak, calculateVirtusScore } from "@/features/entries/logic";
 import type { HabitWithMeta } from "./types";
 
 /**
@@ -66,6 +66,7 @@ export async function getHabitsForDate(
       isCompletedToday: !!dateEntry && (dateEntry.count ?? 1) >= h.targetCount,
       todayCount: dateEntry?.count ?? 0,
       currentStreak: calculateCurrentStreak(completedDates),
+      virtusScore: calculateVirtusScore(completedDates),
     };
   });
 }

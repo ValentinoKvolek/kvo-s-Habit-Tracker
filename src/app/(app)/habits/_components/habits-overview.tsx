@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Flame, Plus, TrendingUp } from "lucide-react";
+import { Plus, TrendingUp } from "lucide-react";
 import { HABIT_COLOR_MAP } from "@/lib/colors";
 import type { HabitColor } from "@/db/schema";
 
@@ -15,6 +15,7 @@ export type HabitOverviewItem = {
   color: string;
   category: string;
   currentStreak: number;
+  virtusScore: number;
   isCompletedToday: boolean;
   weekCompletion: boolean[];
 };
@@ -79,6 +80,35 @@ function TodayRing({ pct, done, total }: { pct: number; done: number; total: num
         <span className="text-[10px] text-parchment-500 dark:text-parchment-400 leading-none">
           {done}/{total}
         </span>
+      </div>
+    </div>
+  );
+}
+
+// ─── Virtus badge ─────────────────────────────────────────────────────────────
+
+function virtusColor(score: number): string {
+  if (score >= 85) return "#b07a30"; // gold — máxima virtud
+  if (score >= 60) return "#8b6914"; // ámbar
+  if (score >= 35) return "#7a6b52"; // tierra
+  return "#a09080";                  // tenue
+}
+
+function VirtusBadge({ score }: { score: number }) {
+  const color = virtusColor(score);
+  const S = 28, sw = 3, r = (S - sw) / 2, circ = 2 * Math.PI * r;
+  const offset = circ - (score / 100) * circ;
+  return (
+    <div className="relative flex-shrink-0" style={{ width: S, height: S }} title={`Virtus: ${score}/100`}>
+      <svg width={S} height={S} style={{ transform: "rotate(-90deg)" }}>
+        <circle cx={S / 2} cy={S / 2} r={r} fill="none"
+          stroke="rgba(139,69,19,0.10)" strokeWidth={sw} />
+        <circle cx={S / 2} cy={S / 2} r={r} fill="none"
+          stroke={color} strokeWidth={sw} strokeLinecap="round"
+          strokeDasharray={circ} strokeDashoffset={offset} />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-[7px] font-bold leading-none" style={{ color }}>{score}</span>
       </div>
     </div>
   );
@@ -198,9 +228,9 @@ function WeekBars({ habits }: { habits: HabitOverviewItem[] }) {
 export function HabitsOverview({ habits, completedToday, totalToday, userName }: Props) {
   const pct = totalToday === 0 ? 0 : Math.round((completedToday / totalToday) * 100);
   const allDone = totalToday > 0 && completedToday === totalToday;
-  const topStreaks = [...habits]
-    .filter((h) => h.currentStreak > 0)
-    .sort((a, b) => b.currentStreak - a.currentStreak)
+  const topVirtus = [...habits]
+    .filter((h) => h.virtusScore > 0)
+    .sort((a, b) => b.virtusScore - a.virtusScore)
     .slice(0, 3);
 
   return (
@@ -267,11 +297,7 @@ export function HabitsOverview({ habits, completedToday, totalToday, userName }:
                         <span className="text-sm font-medium text-parchment-900 dark:text-parchment-50 truncate">
                           {h.name}
                         </span>
-                        {h.currentStreak > 0 && (
-                          <span className="flex items-center gap-0.5 text-[10px] font-semibold flex-shrink-0" style={{ color }}>
-                            <Flame size={9} />{h.currentStreak}
-                          </span>
-                        )}
+                        {h.virtusScore > 0 && <VirtusBadge score={h.virtusScore} />}
                       </div>
                       <WeekDots completion={h.weekCompletion} color={color} />
                     </div>
@@ -340,24 +366,28 @@ export function HabitsOverview({ habits, completedToday, totalToday, userName }:
         </motion.section>
       )}
 
-      {/* ── TOP STREAKS ── */}
-      {topStreaks.length > 0 && (
+      {/* ── TOP VIRTUS ── */}
+      {topVirtus.length > 0 && (
         <motion.section
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.65, duration: 0.45 }}
           className="rounded-2xl bg-gradient-to-br from-parchment-200/80 dark:from-parchment-800/80 to-parchment-100 dark:to-parchment-900 border border-parchment-300 dark:border-parchment-700 p-5"
         >
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-1">
             <TrendingUp size={12} className="text-parchment-400 dark:text-parchment-500" />
             <h3 className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-500">
-              Rachas activas
+              Virtus
             </h3>
           </div>
+          <p className="text-[9px] text-parchment-400 dark:text-parchment-500 mb-4 leading-relaxed">
+            Puntuación de consistencia 0–100. Un día perdido reduce el score sin reiniciarlo.
+          </p>
           <div className="flex flex-col gap-3">
-            {topStreaks.map((h, i) => {
+            {topVirtus.map((h, i) => {
               const color = getColor(h.color);
               const rankColors = ["#b07a30", "#8d7a62", "#6b5c48"];
+              const vc = virtusColor(h.virtusScore);
               return (
                 <Link key={h.id} href={`/habits/${h.id}`} className="flex items-center gap-3 group">
                   <span className="text-[11px] font-bold w-5 flex-shrink-0 text-center" style={{ color: rankColors[i] }}>{i + 1}</span>
@@ -365,9 +395,12 @@ export function HabitsOverview({ habits, completedToday, totalToday, userName }:
                   <span className="flex-1 text-sm text-parchment-800 dark:text-parchment-100 truncate group-hover:text-parchment-950 dark:group-hover:text-parchment-50 transition-colors">
                     {h.name}
                   </span>
-                  <span className="text-xs font-bold flex-shrink-0 flex items-center gap-1" style={{ color }}>
-                    <Flame size={11} />{h.currentStreak} días
-                  </span>
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <VirtusBadge score={h.virtusScore} />
+                    <span className="text-[10px] font-semibold" style={{ color: vc }}>
+                      {h.virtusScore >= 85 ? "Perfecta" : h.virtusScore >= 60 ? "Fuerte" : h.virtusScore >= 35 ? "Creciendo" : "Iniciando"}
+                    </span>
+                  </div>
                 </Link>
               );
             })}
