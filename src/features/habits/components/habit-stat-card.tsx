@@ -1,4 +1,4 @@
-import { getCompletionRate } from "@/features/entries/logic";
+import { getCompletionRate, getVirtusRank, getVirtusColor, VIRTUS_MAX } from "@/features/entries/logic";
 import { getHabitColor } from "@/lib/colors";
 import type { HabitColor } from "@/db/schema";
 
@@ -11,14 +11,6 @@ interface HabitStatCardProps {
 }
 
 const HABIT_THRESHOLD = 21;
-
-function virtusLabel(score: number) {
-  if (score >= 85) return { text: "Virtus Perfecta", color: "#b07a30" };
-  if (score >= 60) return { text: "Virtus Fuerte", color: "#8b6914" };
-  if (score >= 35) return { text: "Creciendo", color: "#7a6b52" };
-  if (score > 0)   return { text: "Iniciando", color: "#a09080" };
-  return { text: "Sin datos", color: "#c0b0a0" };
-}
 
 export function HabitStatCard({
   allDates,
@@ -35,7 +27,8 @@ export function HabitStatCard({
   const daysLeft = Math.max(0, HABIT_THRESHOLD - totalDays);
   const progress = Math.min(100, (totalDays / HABIT_THRESHOLD) * 100);
   const isFormed = totalDays >= HABIT_THRESHOLD;
-  const vLabel = virtusLabel(virtusScore);
+  const rank = getVirtusRank(virtusScore);
+  const vColor = getVirtusColor(virtusScore);
 
   const stats = [
     { label: "Racha actual", value: currentStreak, unit: currentStreak === 1 ? "día" : "días" },
@@ -45,7 +38,7 @@ export function HabitStatCard({
   ];
 
   const S = 80, sw = 6, r = (S - sw) / 2, circ = 2 * Math.PI * r;
-  const offset = circ - (virtusScore / 100) * circ;
+  const offset = circ - (virtusScore / VIRTUS_MAX) * circ;
 
   return (
     <div className="flex flex-col gap-3">
@@ -56,25 +49,28 @@ export function HabitStatCard({
             <circle cx={S / 2} cy={S / 2} r={r} fill="none"
               stroke="rgba(139,69,19,0.10)" strokeWidth={sw} />
             <circle cx={S / 2} cy={S / 2} r={r} fill="none"
-              stroke={vLabel.color} strokeWidth={sw} strokeLinecap="round"
+              stroke={vColor} strokeWidth={sw} strokeLinecap="round"
               strokeDasharray={circ} strokeDashoffset={offset}
               style={{ transition: "stroke-dashoffset 1s ease" }}
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-0">
-            <span className="text-xl font-serif font-bold leading-none" style={{ color: vLabel.color }}>{virtusScore}</span>
-            <span className="text-[8px] text-parchment-400 leading-none mt-0.5">/ 100</span>
+            <span className="text-xl font-serif font-bold leading-none" style={{ color: vColor }}>{virtusScore}</span>
+            <span className="text-[8px] text-parchment-400 leading-none mt-0.5">/ 1000</span>
           </div>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-400 mb-1">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-parchment-400 dark:text-parchment-400 mb-0.5">
             Virtus Score
           </p>
-          <p className="text-base font-semibold leading-tight mb-2" style={{ color: vLabel.color }}>
-            {vLabel.text}
+          <p className="text-base font-serif font-bold leading-tight" style={{ color: vColor }}>
+            {rank.philosopher}
+          </p>
+          <p className="text-[10px] font-medium text-parchment-500 dark:text-parchment-400 mb-2 italic">
+            {rank.title}
           </p>
           <p className="text-[10px] text-parchment-500 dark:text-parchment-400 leading-relaxed">
-            Un día perdido reduce el score, no lo reinicia. Tres días activo lo recuperan.
+            {rank.description}
           </p>
         </div>
       </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { Plus, TrendingUp } from "lucide-react";
 import { HABIT_COLOR_MAP } from "@/lib/colors";
+import { getVirtusRank, getVirtusColor, VIRTUS_MAX } from "@/features/entries/logic";
 import type { HabitColor } from "@/db/schema";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -87,19 +88,14 @@ function TodayRing({ pct, done, total }: { pct: number; done: number; total: num
 
 // ─── Virtus badge ─────────────────────────────────────────────────────────────
 
-function virtusColor(score: number): string {
-  if (score >= 85) return "#b07a30"; // gold — máxima virtud
-  if (score >= 60) return "#8b6914"; // ámbar
-  if (score >= 35) return "#7a6b52"; // tierra
-  return "#a09080";                  // tenue
-}
-
 function VirtusBadge({ score }: { score: number }) {
-  const color = virtusColor(score);
-  const S = 28, sw = 3, r = (S - sw) / 2, circ = 2 * Math.PI * r;
-  const offset = circ - (score / 100) * circ;
+  const color = getVirtusColor(score);
+  const S = 34, sw = 3, r = (S - sw) / 2, circ = 2 * Math.PI * r;
+  const offset = circ - (score / VIRTUS_MAX) * circ;
+  const label = score >= 1000 ? "MAX" : String(score);
+  const fontSize = label.length >= 4 ? "6px" : "7px";
   return (
-    <div className="relative flex-shrink-0" style={{ width: S, height: S }} title={`Virtus: ${score}/100`}>
+    <div className="relative flex-shrink-0" style={{ width: S, height: S }} title={`Virtus: ${score}/1000`}>
       <svg width={S} height={S} style={{ transform: "rotate(-90deg)" }}>
         <circle cx={S / 2} cy={S / 2} r={r} fill="none"
           stroke="rgba(139,69,19,0.10)" strokeWidth={sw} />
@@ -108,7 +104,7 @@ function VirtusBadge({ score }: { score: number }) {
           strokeDasharray={circ} strokeDashoffset={offset} />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-[7px] font-bold leading-none" style={{ color }}>{score}</span>
+        <span className="font-bold leading-none" style={{ color, fontSize }}>{label}</span>
       </div>
     </div>
   );
@@ -387,20 +383,21 @@ export function HabitsOverview({ habits, completedToday, totalToday, userName }:
             {topVirtus.map((h, i) => {
               const color = getColor(h.color);
               const rankColors = ["#b07a30", "#8d7a62", "#6b5c48"];
-              const vc = virtusColor(h.virtusScore);
+              const vc = getVirtusColor(h.virtusScore);
+              const rank = getVirtusRank(h.virtusScore);
               return (
                 <Link key={h.id} href={`/habits/${h.id}`} className="flex items-center gap-3 group">
                   <span className="text-[11px] font-bold w-5 flex-shrink-0 text-center" style={{ color: rankColors[i] }}>{i + 1}</span>
                   <div className="w-1.5 h-5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-                  <span className="flex-1 text-sm text-parchment-800 dark:text-parchment-100 truncate group-hover:text-parchment-950 dark:group-hover:text-parchment-50 transition-colors">
-                    {h.name}
-                  </span>
-                  <div className="flex items-center gap-1.5 flex-shrink-0">
-                    <VirtusBadge score={h.virtusScore} />
-                    <span className="text-[10px] font-semibold" style={{ color: vc }}>
-                      {h.virtusScore >= 85 ? "Perfecta" : h.virtusScore >= 60 ? "Fuerte" : h.virtusScore >= 35 ? "Creciendo" : "Iniciando"}
+                  <div className="flex-1 min-w-0">
+                    <span className="block text-sm text-parchment-800 dark:text-parchment-100 truncate group-hover:text-parchment-950 dark:group-hover:text-parchment-50 transition-colors">
+                      {h.name}
+                    </span>
+                    <span className="block text-[9px] italic truncate" style={{ color: vc }}>
+                      {rank.philosopher}
                     </span>
                   </div>
+                  <VirtusBadge score={h.virtusScore} />
                 </Link>
               );
             })}

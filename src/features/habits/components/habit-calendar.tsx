@@ -1,15 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { getDaysInMonth, getDayOfWeek, formatDisplayDate } from "@/lib/dates";
+import { useState, useTransition } from "react";
+import { getDaysInMonth, getDayOfWeek, formatDisplayDate, getTodayString } from "@/lib/dates";
 import { getHabitColor } from "@/lib/colors";
 import { cn } from "@/lib/cn";
 import { DAY_LABELS } from "@/features/habits/constants";
+import { updateEntryCount } from "@/features/entries/actions";
+import { toast } from "sonner";
 import type { HabitColor } from "@/db/schema";
 
 interface HabitCalendarProps {
   entryDates: Set<string>;
   color: HabitColor;
+  habitId: string;
+  targetCount: number;
+  habitCreatedAt: string; // "YYYY-MM-DD"
 }
 
 const MONTH_NAMES = [
@@ -17,39 +22,61 @@ const MONTH_NAMES = [
   "Jul", "Ago", "Sep", "Oct", "Nov", "Dic",
 ];
 
-export function HabitCalendar({ entryDates, color }: HabitCalendarProps) {
-  const today = new Date();
-  const [viewYear, setViewYear] = useState(today.getFullYear());
-  const [viewMonth, setViewMonth] = useState(today.getMonth());
+export function HabitCalendar({
+  entryDates,
+  color,
+  habitId,
+  targetCount,
+  habitCreatedAt,
+}: HabitCalendarProps) {
+  const today = getTodayString();
+  const now = new Date();
+  const [viewYear, setViewYear] = useState(now.getFullYear());
+  const [viewMonth, setViewMonth] = useState(now.getMonth());
+  const [localDates, setLocalDates] = useState(() => new Set(entryDates));
+  const [isPending, startTransition] = useTransition();
 
   const colorData = getHabitColor(color);
   const days = getDaysInMonth(viewYear, viewMonth);
   const firstDayOffset = getDayOfWeek(days[0]);
 
   function prevMonth() {
-    if (viewMonth === 0) {
-      setViewMonth(11);
-      setViewYear((y) => y - 1);
-    } else {
-      setViewMonth((m) => m - 1);
-    }
+    if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1); }
+    else setViewMonth((m) => m - 1);
   }
 
   function nextMonth() {
-    const now = new Date();
-    if (viewYear > now.getFullYear() || (viewYear === now.getFullYear() && viewMonth >= now.getMonth())) {
-      return;
-    }
-    if (viewMonth === 11) {
-      setViewMonth(0);
-      setViewYear((y) => y + 1);
-    } else {
-      setViewMonth((m) => m + 1);
-    }
+    if (viewYear > now.getFullYear() || (viewYear === now.getFullYear() && viewMonth >= now.getMonth())) return;
+    if (viewMonth === 11) { setViewMonth(0); setViewYear((y) => y + 1); }
+    else setViewMonth((m) => m + 1);
   }
 
-  const isCurrentMonth =
-    viewYear === today.getFullYear() && viewMonth === today.getMonth();
+  function handleDayClick(dateStr: string) {
+    const wasCompleted = localDates.has(dateStr);
+
+    setLocalDates((prev) => {
+      const next = new Set(prev);
+      if (wasCompleted) next.delete(dateStr);
+      else next.add(dateStr);
+      return next;
+    });
+
+    startTransition(async () => {
+      try {
+        await updateEntryCount(habitId, dateStr, wasCompleted ? 0 : targetCount);
+      } catch {
+        setLocalDates((prev) => {
+          const next = new Set(prev);
+          if (wasCompleted) next.add(dateStr);
+          else next.delete(dateStr);
+          return next;
+        });
+        toast.error("No se pudo guardar. Intentá de nuevo.");
+      }
+    });
+  }
+
+  const isCurrentMonth = viewYear === now.getFullYear() && viewMonth === now.getMonth();
 
   return (
     <div className="bg-parchment-200 dark:bg-parchment-900 border border-parchment-300 dark:border-parchment-700 rounded-2xl p-5">
@@ -87,39 +114,57 @@ export function HabitCalendar({ entryDates, color }: HabitCalendarProps) {
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-0.5 sm:gap-1">
+      <div className={cn("grid grid-cols-7 gap-0.5 sm:gap-1", isPending && "opacity-70 pointer-events-none")}>
         {Array.from({ length: firstDayOffset }).map((_, i) => (
           <div key={`empty-${i}`} />
         ))}
 
         {days.map((dateStr) => {
-          const isCompleted = entryDates.has(dateStr);
-          const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-          const isToday = dateStr === todayStr;
+          const isCompleted = localDates.has(dateStr);
+          const isToday = dateStr === today;
+          const isFuture = dateStr > today;
+          const isBeforeCreation = dateStr < habitCreatedAt;
+          const isClickable = !isFuture && !isBeforeCreation;
           const dayNum = parseInt(dateStr.split("-")[2]);
 
+          const title = isBeforeCreation
+            ? "Anterior a la creación del hábito"
+            : isCompleted
+            ? `✓ ${formatDisplayDate(dateStr)}`
+            : formatDisplayDate(dateStr);
+
           return (
-            <div
+            <button
               key={dateStr}
-              title={isCompleted ? `✓ ${formatDisplayDate(dateStr)}` : formatDisplayDate(dateStr)}
+              type="button"
+              disabled={!isClickable}
+              onClick={isClickable ? () => handleDayClick(dateStr) : undefined}
+              title={title}
               className={cn(
-                "aspect-square rounded-md sm:rounded-lg flex items-center justify-center text-[10px] sm:text-[11px] font-medium cursor-default transition-all duration-150",
+                "aspect-square rounded-md sm:rounded-lg flex items-center justify-center text-[10px] sm:text-[11px] font-medium transition-all duration-150",
+                isClickable
+                  ? "cursor-pointer hover:scale-105 active:scale-95"
+                  : "cursor-default",
                 isCompleted
                   ? "text-white"
                   : isToday
                   ? "bg-parchment-300 dark:bg-parchment-700 text-parchment-800 dark:text-parchment-100 ring-1 ring-parchment-400 dark:ring-parchment-500"
+                  : isBeforeCreation
+                  ? "text-parchment-300 dark:text-parchment-600 opacity-40"
+                  : isFuture
+                  ? "text-parchment-300 dark:text-parchment-600 opacity-30"
                   : "text-parchment-500 dark:text-parchment-400 hover:bg-parchment-300 dark:hover:bg-parchment-700"
               )}
               style={isCompleted ? { background: colorData.hex + "cc" } : {}}
             >
               {dayNum}
-            </div>
+            </button>
           );
         })}
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-3 mt-4 pt-4 border-t border-parchment-300 dark:border-parchment-700">
+      <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-parchment-300 dark:border-parchment-700">
         <div className="flex items-center gap-1.5">
           <div className="w-4 h-4 rounded-sm bg-parchment-300 dark:bg-parchment-700" />
           <span className="text-xs text-parchment-500 dark:text-parchment-400">Sin completar</span>
@@ -127,6 +172,10 @@ export function HabitCalendar({ entryDates, color }: HabitCalendarProps) {
         <div className="flex items-center gap-1.5">
           <div className="w-4 h-4 rounded-sm" style={{ background: colorData.hex + "cc" }} />
           <span className="text-xs text-parchment-500 dark:text-parchment-400">Completado</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-4 h-4 rounded-sm bg-parchment-200 dark:bg-parchment-800 opacity-40 border border-parchment-300 dark:border-parchment-600" />
+          <span className="text-xs text-parchment-400 dark:text-parchment-500">Antes del hábito</span>
         </div>
       </div>
     </div>

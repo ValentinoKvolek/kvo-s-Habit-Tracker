@@ -66,7 +66,7 @@ export async function getHabitsForDate(
       isCompletedToday: !!dateEntry && (dateEntry.count ?? 1) >= h.targetCount,
       todayCount: dateEntry?.count ?? 0,
       currentStreak: calculateCurrentStreak(completedDates),
-      virtusScore: calculateVirtusScore(completedDates),
+      virtusScore: calculateVirtusScore(completedDates, h.createdAt),
     };
   });
 }

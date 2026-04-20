@@ -37,7 +37,7 @@ export default async function HabitDetailPage({ params }: Props) {
   const entryDateSet = new Set(allDates);
   const currentStreak = calculateCurrentStreak(allDates);
   const longestStreak = calculateLongestStreak(allDates);
-  const virtusScore = calculateVirtusScore(allDates);
+  const virtusScore = calculateVirtusScore(allDates, habit.createdAt);
   const colorData = getHabitColor(habit.color as HabitColor);
 
   const todayEntry = entries.find((e) => e.date === today);
@@ -170,6 +170,9 @@ export default async function HabitDetailPage({ params }: Props) {
         <HabitCalendar
           entryDates={entryDateSet}
           color={habit.color as HabitColor}
+          habitId={habit.id}
+          targetCount={habit.targetCount}
+          habitCreatedAt={habit.createdAt.toISOString().slice(0, 10)}
         />
       </section>
 
