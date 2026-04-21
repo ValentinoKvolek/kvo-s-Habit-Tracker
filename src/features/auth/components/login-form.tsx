@@ -65,12 +65,21 @@ export function LoginForm() {
         {...register("password")}
       />
 
+      <div className="flex justify-end -mt-1">
+        <Link
+          href="/forgot-password"
+          className="text-xs text-parchment-400 hover:text-sienna-700 transition-colors"
+        >
+          ¿Olvidaste tu contraseña?
+        </Link>
+      </div>
+
       <Button
         type="submit"
         variant="brand"
         size="lg"
         isLoading={isLoading}
-        className="mt-2 w-full"
+        className="w-full"
       >
         Iniciar sesión
       </Button>
